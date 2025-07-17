@@ -7,11 +7,15 @@ import AddTodo from './components/AddTodo'
 
 function App() {
   
+  const [isActive, setActive] = useState(true);
   
+  const closeModal = ()=> {
+    setActive(isActive => !isActive)
+  }
 
   return (
     <>
-      <AddTodo active={true}/>
+      <AddTodo active={isActive} setActive={closeModal}/>
       <div className='table'>
 
       <SearchBar/>

@@ -1,14 +1,34 @@
-export default function AddTodo({active}:{active:boolean}){
+export default function AddTodo({active, setActive}:{active:boolean, setActive:()=> void}){
     
 
-    const setActive = () =>{
-        active = false
-        console.log(active)
-    }
+    
     if(active){
         return(
             <div className="overlay">
-                <div className="modal" onClick={setActive}></div>
+                <div className="modal">
+            <span onClick={setActive}>X</span>
+
+                    <div className="grouper">
+                        <label htmlFor="">name</label>
+                        <input type="text" />
+                    </div>
+
+                    <div className="calendar_priority_container">
+                        <div className="grouper">
+                            <label htmlFor="">priority</label>
+                            <select name="" id=""></select>
+                        </div>
+
+
+                        <input type="date"  className="calendar"/>
+                    </div>
+
+
+                    <button>Add</button>
+
+
+
+                </div>
             </div>
         )
     }
