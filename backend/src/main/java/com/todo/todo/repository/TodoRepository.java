@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.todo.todo.dtos.CreateTodoDto;
 import com.todo.todo.models.Todo;
 
 @Repository
@@ -29,8 +30,17 @@ public class TodoRepository {
             new Todo(16, "i don't know anymore aaaaaaaaaah", "High")
 
     ));
+
+
     
     public List<Todo> getAllTodos(){
         return todos;
+    }
+
+    public Todo createTodo(CreateTodoDto dto){
+        
+        Todo todo = new Todo(17, dto.name, dto.priority);
+        todos.add(todo);
+        return todo;
     }
 }

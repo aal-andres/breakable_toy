@@ -2,17 +2,14 @@ package com.todo.todo.models;
 
 import com.todo.todo.enums.Priority;
 import com.todo.todo.enums.Status;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Todo {
     public int id;
     public String name;
     public Status status;
-   // public String text;
     public LocalDateTime created_at;
-    //public String due_date;
+    public String due_date;
     public LocalDateTime completed_at;
     public Priority priority;
 
