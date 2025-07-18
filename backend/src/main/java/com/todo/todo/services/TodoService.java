@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.todo.todo.dtos.CreateTodoDto;
+import com.todo.todo.dtos.UpdateTodoDto;
 import com.todo.todo.models.Todo;
 import com.todo.todo.repository.TodoRepository;
 
@@ -31,5 +32,9 @@ public class TodoService {
 
     public Todo delete(int id ){
         return repository.delete(id);
+    }
+
+    public Todo update(int id, UpdateTodoDto dto){
+        return repository.update(id, dto);
     }
 }
