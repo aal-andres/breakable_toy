@@ -3,39 +3,33 @@ package com.todo.todo.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.todo.todo.models.Todo;
+import com.todo.todo.services.TodoService;
 
 @RestController
 @RequestMapping("/todo")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TodoController {
-    private List<Todo> todos;
+
+    @Autowired
+    private TodoService service;
     
 
 
-    public void GenerateTodos(){
-        todos = new ArrayList<Todo>();
-
-            todos.add(new Todo(1, "Buy groceries", "High"));
-            todos.add(new Todo(2, "Finish project", "Low"));
-            todos.add(new Todo(3, "i don't know", "medium"));
-            todos.add(new Todo(4, "buy chips", "High"));
-            todos.add(new Todo(5, "pet the cat", "High"));
-            todos.add(new Todo(6, "feed the cat", "High"));
-            todos.add(new Todo(7, "i don't know anymore aaaaaaaaaah", "High"));
-        
-    }
+    
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping()
-    public List<Todo> Get(){
-        GenerateTodos();
-        return todos;
+    public List<Todo> Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size){
+        System.out.println("Page: "+page+" size: "+size);
+        return service.getAllTodos(page,size);
     }
 }

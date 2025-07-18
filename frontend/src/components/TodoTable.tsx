@@ -6,7 +6,7 @@ export default function TodoTable(){
     const [todos, setTodos] = useState([]);
     useEffect( ()=>{
 
-           fetch('http://localhost:8080/todo').then(res =>{
+           fetch(import.meta.env.VITE_TODO_API+'todo').then(res =>{
             return res.json()
            }).then(data =>{
             console.log(data)
