@@ -28,4 +28,8 @@ public class TodoService {
     public Todo createTodo(CreateTodoDto dto){
         return this.repository.createTodo(dto);
     }
+
+    public Todo delete(int id ){
+        return repository.delete(id);
+    }
 }
