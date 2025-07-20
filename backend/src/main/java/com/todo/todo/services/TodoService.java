@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.todo.todo.dtos.CreateTodoDto;
+import com.todo.todo.dtos.UpdateTodoDto;
 import com.todo.todo.models.Todo;
 import com.todo.todo.repository.TodoRepository;
 
@@ -25,7 +26,23 @@ public class TodoService {
         return allTodos.subList(from, to);
     }
 
+    public List<Todo> filterByName(String name){
+        return repository.filterByName(name);
+    }
+
     public Todo createTodo(CreateTodoDto dto){
         return this.repository.createTodo(dto);
+    }
+
+    public Todo delete(int id ){
+        return repository.delete(id);
+    }
+
+    public Todo update(int id, UpdateTodoDto dto){
+        return repository.update(id, dto);
+    }
+
+    public Todo checkTodo(int id){
+        return repository.checkTodo(id);
     }
 }

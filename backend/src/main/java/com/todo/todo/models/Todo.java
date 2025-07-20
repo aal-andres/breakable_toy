@@ -9,16 +9,16 @@ public class Todo {
     public String name;
     public Status status;
     public LocalDateTime created_at;
-    public String due_date;
+    public LocalDateTime due_date;
     public LocalDateTime completed_at;
     public Priority priority;
 
     public Todo(int id, String name,String priority ){
         this.id = id;
         this.name = name;
-        this.created_at = LocalDateTime.now().withNano(0);
+        this.created_at = LocalDateTime.now().withSecond(0).withNano(0);
         this.priority = Priority.valueOf(priority.toUpperCase());
-        this.status = Status.DONE;
+        this.status = Status.UNDONE;
     }
 
     
