@@ -39,6 +39,12 @@ public class TodoController {
     }
 
     @CrossOrigin(origins = "http://localhost:5173")
+    @GetMapping("/search")
+    public List<Todo> filterByName(@RequestParam String name){
+        return service.filterByName(name);
+    }
+
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping()
     public Todo Post(@RequestBody CreateTodoDto dto){
         return service.createTodo(dto);
@@ -54,6 +60,12 @@ public class TodoController {
     @PatchMapping("/{id}")
     public Todo update(@PathVariable() int id,@RequestBody UpdateTodoDto dto){
         return service.update(id,dto);
+    }
+
+     @CrossOrigin(origins = "http://localhost:5173")
+    @PatchMapping("/check/{id}")
+    public Todo checkTodo(@PathVariable() int id){
+        return service.checkTodo(id);
     }
 
 }

@@ -11,7 +11,7 @@ public class TodoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TodoApplication.class, args);
-		LocalDateTime now = LocalDateTime.now().withNano(0);
+		LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		System.out.println("oaaaaaaaaaaaalll. "+now.format(formatter));
 	}

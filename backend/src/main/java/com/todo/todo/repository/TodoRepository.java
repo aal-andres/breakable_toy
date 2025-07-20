@@ -1,18 +1,21 @@
 package com.todo.todo.repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
 import com.todo.todo.dtos.CreateTodoDto;
 import com.todo.todo.dtos.UpdateTodoDto;
 import com.todo.todo.enums.Priority;
+import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
 
 @Repository
-public class TodoRepository {
+public class TodoRepository{
 
     private List<Todo> todos = new ArrayList<>(Arrays.asList(
             new Todo(1, "Buy groceries", "High"),
@@ -29,7 +32,10 @@ public class TodoRepository {
             new Todo(12, "i don't know anymore aaaaaaaaaah", "High"),
             new Todo(13, "i don't know anymore aaaaaaaaaah", "High"),
             new Todo(14, "i don't know anymore aaaaaaaaaah", "High"),
-            new Todo(15, "i don't know anymore aaaaaaaaaah", "High")
+            new Todo(15, "i don't know anymore aaaaaaaaaah", "High"),
+            new Todo(16, "Buy tomatoes", "High"),
+            new Todo(17, "buy something i guesssssss", "High"),
+            new Todo(18, "buy type shi", "High")
 
     ));
 
@@ -37,6 +43,10 @@ public class TodoRepository {
     
     public List<Todo> getAllTodos(){
         return todos;
+    }
+
+    public List<Todo> filterByName(String name){
+        return todos.stream().filter(todo -> todo.name.toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
     }
 
     public Todo createTodo(CreateTodoDto dto){
@@ -59,6 +69,16 @@ public class TodoRepository {
         if (dto.priority!=null) {
             todo.priority = Priority.valueOf(dto.priority.toUpperCase());
         }
+        if(dto.priority!=null){
+            todo.due_date = dto.due_date;
+        }
+        return todo;
+    }
+
+    public Todo checkTodo(int id){
+        Todo todo = todos.get(id -1);
+        todo.status = Status.DONE;
+        todo.completed_at = LocalDateTime.now().withNano(0);
         return todo;
     }
 }

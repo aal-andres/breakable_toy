@@ -26,6 +26,10 @@ public class TodoService {
         return allTodos.subList(from, to);
     }
 
+    public List<Todo> filterByName(String name){
+        return repository.filterByName(name);
+    }
+
     public Todo createTodo(CreateTodoDto dto){
         return this.repository.createTodo(dto);
     }
@@ -36,5 +40,9 @@ public class TodoService {
 
     public Todo update(int id, UpdateTodoDto dto){
         return repository.update(id, dto);
+    }
+
+    public Todo checkTodo(int id){
+        return repository.checkTodo(id);
     }
 }
