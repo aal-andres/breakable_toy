@@ -13,11 +13,12 @@ public class Todo {
     public LocalDateTime completed_at;
     public Priority priority;
 
-    public Todo(int id, String name,String priority ){
+    public Todo(int id, String name,String priority,LocalDateTime due_date ){
         this.id = id;
         this.name = name;
         this.created_at = LocalDateTime.now().withSecond(0).withNano(0);
         this.priority = Priority.valueOf(priority.toUpperCase());
+        this.due_date = due_date;
         this.status = Status.UNDONE;
     }
 

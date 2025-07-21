@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.todo.todo.dtos.CreateTodoDto;
 import com.todo.todo.dtos.UpdateTodoDto;
+import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
 import com.todo.todo.repository.TodoRepository;
 
@@ -26,8 +27,8 @@ public class TodoService {
         return allTodos.subList(from, to);
     }
 
-    public List<Todo> filterByName(String name){
-        return repository.filterByName(name);
+    public List<Todo> filterByName(String name,Status status){
+        return repository.filterByName(name,status);
     }
 
     public Todo createTodo(CreateTodoDto dto){
