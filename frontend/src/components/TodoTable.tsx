@@ -22,7 +22,7 @@ export default function TodoTable(){
     
     rowData = todos.map((item:any) =>
         <tr key={item.id}>
-                        <th>id</th>
+                        <th>[ ]</th>
                         <td>{item.name}</td>
                         <td>{item.priority}</td>
                         <td>{item.due_date}</td>
@@ -32,8 +32,8 @@ export default function TodoTable(){
 
     return(
         <>
-            <table>
-                <thead>
+            <table className="todo_table">
+                <thead className="table_head">
                     <tr>
                         <th>[ ]</th>
                         <th>Name</th>
@@ -42,7 +42,7 @@ export default function TodoTable(){
                         <th>actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     {rowData}
                 </tbody>
             </table>

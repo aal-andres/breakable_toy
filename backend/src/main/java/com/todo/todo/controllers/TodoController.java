@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.todo.todo.dtos.CreateTodoDto;
 import com.todo.todo.dtos.UpdateTodoDto;
+import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
 import com.todo.todo.services.TodoService;
 
@@ -40,8 +41,8 @@ public class TodoController {
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("/search")
-    public List<Todo> filterByName(@RequestParam String name){
-        return service.filterByName(name);
+    public List<Todo> filterByName(@RequestParam String name, @RequestParam Status status){
+        return service.filterByName(name, status);
     }
 
     @CrossOrigin(origins = "http://localhost:5173")

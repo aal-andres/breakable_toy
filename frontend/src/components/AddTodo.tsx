@@ -1,7 +1,15 @@
+import { useState } from "react"
+import { addTodo } from "../api/addTodo"
+
 export default function AddTodo({active, setActive}:{active:boolean, setActive:()=> void}){
     
+    const [todo, setTodo] = useState<{name:string,priority:string, due_date:string}>({
+        name: "",
+        priority:"",
+        due_date:""
 
-    
+    })
+
     if(active){
         return(
             <div className="overlay">
@@ -10,21 +18,34 @@ export default function AddTodo({active, setActive}:{active:boolean, setActive:(
 
                     <div className="grouper">
                         <label htmlFor="">name</label>
-                        <input type="text" />
+                        <input type="text" value={todo.name} onChange={e => setTodo(todo => ({
+                            ...todo,
+                            name: e.target.value
+                        }))}/>
                     </div>
 
                     <div className="calendar_priority_container">
                         <div className="grouper">
                             <label htmlFor="">priority</label>
-                            <select name="" id=""></select>
+                            <select value={todo.priority} name="" id="" onChange={e => setTodo(todo => ({
+                                ...todo,
+                                priority: e.target.value
+                            }))}>
+                                <option>High</option>
+                                <option>Medium</option>
+                                <option>Low</option>
+                            </select>
                         </div>
 
 
-                        <input type="date"  className="calendar"/>
+                        <input type="datetime-local" className="calendar" value={todo.due_date} onChange={e => setTodo(todo => ({
+                            ...todo,
+                            due_date: e.target.value
+                        }))}/>
                     </div>
 
 
-                    <button>Add</button>
+                    <button onClick={()=>{addTodo(todo)}}>Add</button>
 
 
 
