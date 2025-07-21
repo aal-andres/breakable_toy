@@ -21,7 +21,7 @@ function App() {
       <SearchBar/>
 
 
-      <button className='add_button'>Add Todo +</button>
+      <button className='add_button' onClick={closeModal}>Add Todo +</button>
 
       <TodoTable/>
 
