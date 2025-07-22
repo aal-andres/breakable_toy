@@ -7,32 +7,33 @@ import org.springframework.stereotype.Service;
 
 import com.todo.todo.dtos.CreateTodoDto;
 import com.todo.todo.dtos.UpdateTodoDto;
+import com.todo.todo.enums.Priority;
 import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
 import com.todo.todo.repository.TodoRepository;
+import com.todo.todo.repository.TodoRepositoryImpl;
 
 
 @Service
 public class TodoService {
 
     @Autowired
-    private TodoRepository repository;
+    private TodoRepositoryImpl repository;
     
 
     public List<Todo> getAllTodos(int page, int size){
-        List<Todo> allTodos = this.repository.getAllTodos();
+        List<Todo> allTodos = this.repository.findAll();
         int from = page*size;
         int to = Math.min(from+size, allTodos.size());
-        System.out.println("from : "+from+" to: "+to);
         return allTodos.subList(from, to);
     }
 
-    public List<Todo> filterByName(String name,Status status){
-        return repository.filterByName(name,status);
+    public List<Todo> searchBy(String name,Status status, Priority priority){
+        return repository.searchBy(name,status, priority);
     }
 
     public Todo createTodo(CreateTodoDto dto){
-        return this.repository.createTodo(dto);
+        return this.repository.create(dto);
     }
 
     public Todo delete(int id ){
