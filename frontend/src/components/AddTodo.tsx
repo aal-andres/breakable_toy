@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { addTodo } from "../api/addTodo"
+import { addTodo } from "../api/todos"
 
 export default function AddTodo({active, setActive}:{active:boolean, setActive:()=> void}){
     

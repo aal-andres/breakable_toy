@@ -1,5 +1,6 @@
 package com.todo.todo.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.todo.todo.dtos.TodoDto;
@@ -15,5 +16,6 @@ public interface TodoRepository {
     public Todo delete(int id);
     public Todo update(int id, TodoDto dto);
     public List<Todo> searchBy(String name,Status status, Priority priority);
+    public List<Todo> filterByDueDatePriority(Priority priority, LocalDateTime due_date);
     
 } 

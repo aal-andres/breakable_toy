@@ -9,7 +9,6 @@ import com.todo.todo.dtos.TodoDto;
 import com.todo.todo.enums.Priority;
 import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
-import com.todo.todo.repository.TodoRepository;
 import com.todo.todo.repository.TodoRepositoryImpl;
 
 

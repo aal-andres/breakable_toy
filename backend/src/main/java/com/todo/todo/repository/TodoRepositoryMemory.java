@@ -14,7 +14,7 @@ import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
 
 
-@Repository
+@Repository("TodoRepositoryMemory")
 public class TodoRepositoryMemory implements TodoRepository{
      private List<Todo> todos = new ArrayList<>(Arrays.asList(
             new Todo(1, "Buy groceries", "High",LocalDateTime.parse("2025-07-20T11:30:00")),

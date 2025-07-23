@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { getFilteredTodos } from "../api/addTodo"
+import { getFilteredTodos } from "../api/todos"
 import { useGlobalState } from "../state/todo-context"
 
 export default function SearchBar(){
@@ -14,10 +14,10 @@ export default function SearchBar(){
       const filterTodos = async () => {
         const todoList = await getFilteredTodos(parameters.name,parameters.priority.toUpperCase(),parameters.status.toUpperCase())
         console.log(todoList)
-        setTodos(todoList.data)
+        setTodos(todoList)
       }
 
-  const {todos,setTodos} = useGlobalState();
+  const {setTodos} = useGlobalState();
 
     return (<div className='filter'>
         

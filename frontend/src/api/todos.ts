@@ -1,3 +1,4 @@
+import type { todo } from "../types/todo"
 import client from "./httpService"
 
 export const addTodo = async (todo:any) => {
@@ -5,8 +6,8 @@ export const addTodo = async (todo:any) => {
     console.log(response)
 }
 
-export const getFilteredTodos = async(name:string,priority:string,status:string) => {
+export const getFilteredTodos = async(name:string,priority:string,status:string):Promise<todo[]> => {
     const response = await client.get(`todo/search?name=${name}&status=${status}&priority=${priority}`)
     console.log(response)
-    return response;
+    return response.data;
 }
