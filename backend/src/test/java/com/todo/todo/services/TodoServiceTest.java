@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class) // Enables Mockito annotations
+@ExtendWith(MockitoExtension.class)
 public class TodoServiceTest {
 
     @Mock
@@ -63,7 +63,7 @@ public class TodoServiceTest {
     @CsvSource({
         "0, 2, 2",
         "0, 2, 2",
-        "9, 2, 2"
+        "9, 2, 0"
     })
     public void getAllTodos(int page, int size, int page_expected_size){
 
@@ -80,19 +80,16 @@ public class TodoServiceTest {
         System.out.println("el otro jssjajshjaja omehfhs. skjsdhsj. sjhdhjkjks.  sdnsdjszdjahh. "+expectedSizeList.size());
         assertEquals(page_expected_size, result.size());
     }
-   // @Test
-   // void getAllTodos_shouldReturnAllTodosWhenNoPagination() {
-   //     // Arrange
-   //     List<Todo> mockTodos = Arrays.asList(
-   //             new Todo(1, "Buy milk", "High", LocalDateTime.now())
-   //     );
-   //     when(repository.findAll()).thenReturn(mockTodos);
-//
-   //     // Act
-   //     List<Todo> result = todoService.getAllTodos(0, 100); // Large size to get all
-//
-   //     // Assert
-   //     assertEquals(1, result.size());
-   //     assertEquals(mockTodos, result);
-   // }
+    @Test
+    void getAllTodos_shouldReturnAllTodosWhenDefaultPaginationValues() {
+
+        int default_page = 0;
+        int default_size =9;
+        
+        when(repository.findAll()).thenReturn(todos);
+
+        List<Todo> result = todoService.getAllTodos(default_page,default_size);
+
+        assertEquals(default_size, result.size());
+    }
 }
