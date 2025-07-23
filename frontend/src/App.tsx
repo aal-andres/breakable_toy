@@ -4,6 +4,7 @@ import SearchBar from './components/SearchBar'
 import TodoTable from './components/TodoTable'
 import TimeMetrics from './components/TimeTracker'
 import AddTodo from './components/AddTodo'
+import { GlobalStateProvider } from './state/todo-context'
 
 function App() {
   
@@ -18,12 +19,15 @@ function App() {
       <AddTodo active={isActive} setActive={closeModal}/>
       <div className='table'>
 
+      <GlobalStateProvider>
       <SearchBar/>
 
 
       <button className='add_button' onClick={closeModal}>Add Todo +</button>
 
       <TodoTable/>
+      </GlobalStateProvider>
+
 
       <TimeMetrics/>
 

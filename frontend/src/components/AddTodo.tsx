@@ -29,7 +29,7 @@ export default function AddTodo({active, setActive}:{active:boolean, setActive:(
                             <label htmlFor="">priority</label>
                             <select value={todo.priority} name="" id="" onChange={e => setTodo(todo => ({
                                 ...todo,
-                                priority: e.target.value
+                                priority: e.target.value.toUpperCase()
                             }))}>
                                 <option>High</option>
                                 <option>Medium</option>

@@ -5,8 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.todo.todo.dtos.CreateTodoDto;
-import com.todo.todo.dtos.UpdateTodoDto;
+import com.todo.todo.dtos.TodoDto;
 import com.todo.todo.enums.Priority;
 import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
@@ -32,7 +31,7 @@ public class TodoService {
         return repository.searchBy(name,status, priority);
     }
 
-    public Todo createTodo(CreateTodoDto dto){
+    public Todo createTodo(TodoDto dto){
         return this.repository.create(dto);
     }
 
@@ -40,7 +39,7 @@ public class TodoService {
         return repository.delete(id);
     }
 
-    public Todo update(int id, UpdateTodoDto dto){
+    public Todo update(int id, TodoDto dto){
         return repository.update(id, dto);
     }
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useGlobalState } from "../state/todo-context";
+
+
 export default function TodoTable(){
 
-
     let rowData
-    const [todos, setTodos] = useState([]);
+    const {todos, setTodos} = useGlobalState()
     useEffect( ()=>{
 
            fetch(import.meta.env.VITE_TODO_API+'todo').then(res =>{

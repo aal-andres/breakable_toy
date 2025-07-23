@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.todo.todo.dtos.CreateTodoDto;
-import com.todo.todo.dtos.UpdateTodoDto;
+import com.todo.todo.dtos.TodoDto;
 import com.todo.todo.enums.Priority;
 import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
@@ -44,7 +43,7 @@ public class TodoController {
     }
 
     @PostMapping()
-    public Todo Post(@RequestBody CreateTodoDto dto){
+    public Todo Post(@RequestBody TodoDto dto){
         return service.createTodo(dto);
     }
 
@@ -54,7 +53,7 @@ public class TodoController {
     }
 
     @PatchMapping("/{id}")
-    public Todo update(@PathVariable() int id,@RequestBody UpdateTodoDto dto){
+    public Todo update(@PathVariable() int id,@RequestBody TodoDto dto){
         return service.update(id,dto);
     }
 
