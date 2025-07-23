@@ -12,7 +12,8 @@ public interface TodoRepository {
 
     public List<Todo> findAll();
     public Todo create(TodoDto dto);
-    public Todo checkTodo(int id);
+    public Todo markDone(int id);
+    public Todo markUndone(int id);
     public Todo delete(int id);
     public Todo update(int id, TodoDto dto);
     public List<Todo> searchBy(String name,Status status, Priority priority);

@@ -46,7 +46,11 @@ public class TodoRepositoryImpl implements TodoRepository{
         return update(id, dto);
     }
 
-    public Todo checkTodo(int id){
-        return repository.checkTodo(id);
+    public Todo markDone(int id){
+        return repository.markDone(id);
+    }
+
+     public Todo markUndone(int id){
+        return repository.markUndone(id);
     }
 }

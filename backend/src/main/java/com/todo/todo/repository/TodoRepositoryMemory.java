@@ -83,15 +83,27 @@ public class TodoRepositoryMemory implements TodoRepository{
         return todo;
     }
 
-    public Todo checkTodo(int id){
+    public Todo markDone(int id){
         Todo todo = todos.get(id -1);
         if(todo.status == Status.DONE){
-            todo.status = Status.UNDONE;
+            return todo;
         }else{
+
             todo.status = Status.DONE;
+            todo.completed_at = LocalDateTime.now().withNano(0);
+            return todo;
         }
-        
-        todo.completed_at = LocalDateTime.now().withNano(0);
-        return todo;
+    }
+
+    public Todo markUndone(int id){
+        Todo todo = todos.get(id -1);
+
+        if(todo.status == Status.UNDONE){
+            return todo;
+        }else{
+            todo.status = Status.UNDONE;
+            todo.completed_at = null;
+            return todo;
+        }
     }
 }
