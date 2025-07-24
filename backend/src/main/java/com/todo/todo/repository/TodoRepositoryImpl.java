@@ -19,6 +19,9 @@ public class TodoRepositoryImpl implements TodoRepository{
     }
 
 
+    public Todo getById(int id){
+         return repository.getById(id);
+    }
     
     public List<Todo> findAll(){
         return repository.findAll();
@@ -38,7 +41,7 @@ public class TodoRepositoryImpl implements TodoRepository{
         return repository.filterByDueDatePriority(priority, due_date);
     }
 
-    public Todo delete(int id){
+    public boolean delete(int id){
         return repository.delete(id);
     }
 

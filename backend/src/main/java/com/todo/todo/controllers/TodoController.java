@@ -38,6 +38,11 @@ public class TodoController {
         return service.getAllTodos(page,size);
     }
 
+    @GetMapping("/{id}")
+    public Todo GetById(@RequestParam int id){
+        return service.getById(id);
+    }
+
     @GetMapping("/search")
     public List<Todo> searchBy(@RequestParam String name, @RequestParam Status status, @RequestParam Priority priority){
         return service.searchBy(name, status, priority);
@@ -49,7 +54,7 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
-    public Todo Delete(@PathVariable() int id){
+    public boolean Delete(@PathVariable() int id){
         return service.delete(id);
     }
 

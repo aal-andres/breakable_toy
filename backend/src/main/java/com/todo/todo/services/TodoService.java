@@ -17,6 +17,11 @@ public class TodoService {
 
     @Autowired
     private TodoRepositoryImpl repository;
+
+
+    public Todo getById(int id){
+        return repository.getById(id);
+    }
     
 
     public List<Todo> getAllTodos(int page, int size){
@@ -34,7 +39,7 @@ public class TodoService {
         return this.repository.create(dto);
     }
 
-    public Todo delete(int id ){
+    public boolean delete(int id ){
         return repository.delete(id);
     }
 
