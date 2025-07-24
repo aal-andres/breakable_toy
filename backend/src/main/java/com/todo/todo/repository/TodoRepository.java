@@ -17,7 +17,7 @@ public interface TodoRepository {
     public Todo markUndone(int id);
     public Todo delete(int id);
     public Todo update(int id, TodoDto dto);
-    public Stream<Todo> searchBy(String name,Status status, Priority priority);
+    public Stream<Todo> searchBy(String name,String status, String priority);
     public List<Todo> filterByDueDatePriority(Priority priority, LocalDateTime due_date);
     
 } 

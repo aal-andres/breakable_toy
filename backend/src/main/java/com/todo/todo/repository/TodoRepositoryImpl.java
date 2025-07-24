@@ -25,7 +25,7 @@ public class TodoRepositoryImpl implements TodoRepository{
         return repository.findAll();
     }
 
-    public Stream<Todo> searchBy(String name,Status status,Priority priority){
+    public Stream<Todo> searchBy(String name,String status,String priority){
         return repository.searchBy(name, status, priority);
     }
 

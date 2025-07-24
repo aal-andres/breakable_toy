@@ -36,15 +36,11 @@ public class TodoController {
 
     @GetMapping()
     public List<Todo> Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size
-    ,@RequestParam(required = false) String name, @RequestParam(required = false) Status status
-    , @RequestParam(required = false) Priority priority){
+    ,@RequestParam(required = false) String name, @RequestParam(required = false) String status
+    , @RequestParam(required = false) String priority){
         return service.getAllTodos(page,size,name,status,priority);
     }
 
-    @GetMapping("/search")
-    public Stream<Todo> searchBy(@RequestParam String name, @RequestParam Status status, @RequestParam Priority priority){
-        return service.searchBy(name, status, priority);
-    }
 
     @PostMapping()
     public Todo Post(@RequestBody TodoDto dto){

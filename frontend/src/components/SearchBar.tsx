@@ -41,6 +41,7 @@ export default function SearchBar(){
                             }))}>
                 <option>Done</option>
                 <option>Undone</option>
+                <option>All</option>
               </select>
             </div>
 
@@ -53,6 +54,7 @@ export default function SearchBar(){
                 <option>High</option>
                 <option>Medium</option>
                 <option>Low</option>
+                <option>All</option>
               </select>
             </div>
           </div>

@@ -45,7 +45,7 @@ public class TodoRepositoryMemory implements TodoRepository{
         return todos;
     }
 
-    public Stream<Todo> searchBy(String name,Status status,Priority priority){
+    public Stream<Todo> searchBy(String name,String status,String priority){
         Stream<Todo> filteredList = todos.stream();
         if(name!=null && !name.isEmpty()){
             System.out.println("entreeeeee: "+name);
@@ -53,11 +53,19 @@ public class TodoRepositoryMemory implements TodoRepository{
         }
 
         if(status !=null ){
-            filteredList = filteredList.filter(t -> t.status == status);
+        if(!status.equals("ALL")){
+            
+                filteredList = filteredList.filter(t -> t.status == Status.valueOf(status.toUpperCase()));
+            }
         }
 
         if( priority != null){
-            filteredList = filteredList.filter(t -> t.priority == priority);
+            
+        if(!priority.equals("ALL")){
+
+                filteredList = filteredList.filter(t -> t.priority == Priority.valueOf(priority.toUpperCase()));
+            }
+
         }
 
         return filteredList;

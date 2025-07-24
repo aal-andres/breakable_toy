@@ -22,12 +22,12 @@ public class TodoService {
     private TodoRepositoryImpl repository;
     
 
-    public List<Todo> getAllTodos(int page, int size, String name,Status status, Priority priority){
+    public List<Todo> getAllTodos(int page, int size, String name,String status, String priority){
         Stream<Todo> allTodos = this.repository.searchBy(name,status,priority);
        return allTodos.skip((long)page*size).limit(size).collect(Collectors.toList());
     }
 
-    public Stream<Todo> searchBy(String name,Status status, Priority priority){
+    public Stream<Todo> searchBy(String name,String status, String priority){
         return repository.searchBy(name,status, priority);
     }
 
