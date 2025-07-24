@@ -1,6 +1,9 @@
 package com.todo.todo.services;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +22,12 @@ public class TodoService {
     private TodoRepositoryImpl repository;
     
 
-    public List<Todo> getAllTodos(int page, int size){
-        List<Todo> allTodos = this.repository.findAll();
-        int from = page*size;
-        int to = Math.min(from+size, allTodos.size());
-        return allTodos.subList(from, to);
+    public List<Todo> getAllTodos(int page, int size, String name,Status status, Priority priority){
+        Stream<Todo> allTodos = this.repository.searchBy(name,status,priority);
+       return allTodos.skip((long)page*size).limit(size).collect(Collectors.toList());
     }
 
-    public List<Todo> searchBy(String name,Status status, Priority priority){
+    public Stream<Todo> searchBy(String name,Status status, Priority priority){
         return repository.searchBy(name,status, priority);
     }
 

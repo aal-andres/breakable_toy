@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +35,7 @@ public class TodoRepositoryMemory implements TodoRepository{
             new Todo(15, "i don't know anymore aaaaaaaaaah", "High",LocalDateTime.parse("2025-07-20T11:30:00")),
             new Todo(16, "Buy tomatoes", "High",LocalDateTime.parse("2025-07-20T11:30:00")),
             new Todo(17, "buy something i guesssssss", "High",LocalDateTime.parse("2025-07-20T11:30:00")),
-            new Todo(18, "buy type shi", "High",LocalDateTime.parse("2025-07-20T11:30:00"))
+            new Todo(18, "buy type shi", "Low",LocalDateTime.parse("2025-07-20T11:30:00"))
 
     ));
 
@@ -44,13 +45,22 @@ public class TodoRepositoryMemory implements TodoRepository{
         return todos;
     }
 
-    public List<Todo> searchBy(String name,Status status,Priority priority){
-        return todos.stream()
-        
-        .filter(todo -> todo.name.toLowerCase().contains(name.toLowerCase()))
-        .filter(todo -> todo.status == status)
-        .filter(todo -> todo.priority == priority)
-        .collect(Collectors.toList());
+    public Stream<Todo> searchBy(String name,Status status,Priority priority){
+        Stream<Todo> filteredList = todos.stream();
+        if(name!=null && !name.isEmpty()){
+            System.out.println("entreeeeee: "+name);
+            filteredList = filteredList.filter(t -> t.name.toLowerCase().contains(name.toLowerCase()));
+        }
+
+        if(status !=null ){
+            filteredList = filteredList.filter(t -> t.status == status);
+        }
+
+        if( priority != null){
+            filteredList = filteredList.filter(t -> t.priority == priority);
+        }
+
+        return filteredList;
     }
 
     public Todo create(TodoDto dto){

@@ -1,6 +1,7 @@
 package com.todo.todo.controllers;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,12 +35,14 @@ public class TodoController {
     
 
     @GetMapping()
-    public List<Todo> Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size){
-        return service.getAllTodos(page,size);
+    public List<Todo> Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size
+    ,@RequestParam(required = false) String name, @RequestParam(required = false) Status status
+    , @RequestParam(required = false) Priority priority){
+        return service.getAllTodos(page,size,name,status,priority);
     }
 
     @GetMapping("/search")
-    public List<Todo> searchBy(@RequestParam String name, @RequestParam Status status, @RequestParam Priority priority){
+    public Stream<Todo> searchBy(@RequestParam String name, @RequestParam Status status, @RequestParam Priority priority){
         return service.searchBy(name, status, priority);
     }
 

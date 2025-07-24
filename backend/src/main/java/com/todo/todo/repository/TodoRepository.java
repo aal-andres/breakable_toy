@@ -2,6 +2,7 @@ package com.todo.todo.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.todo.todo.dtos.TodoDto;
 import com.todo.todo.enums.Priority;
@@ -16,7 +17,7 @@ public interface TodoRepository {
     public Todo markUndone(int id);
     public Todo delete(int id);
     public Todo update(int id, TodoDto dto);
-    public List<Todo> searchBy(String name,Status status, Priority priority);
+    public Stream<Todo> searchBy(String name,Status status, Priority priority);
     public List<Todo> filterByDueDatePriority(Priority priority, LocalDateTime due_date);
     
 } 

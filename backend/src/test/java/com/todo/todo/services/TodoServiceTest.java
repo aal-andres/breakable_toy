@@ -54,45 +54,4 @@ public class TodoServiceTest {
 
     ));
 
-
-    @BeforeEach
-    void setUp() {
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-        "0, 2, 2",
-        "0, 2, 2",
-        "9, 2, 2"
-    })
-    public void getAllTodos(int page, int size, int page_expected_size){
-
-        List<Todo>expectedSizeList = new ArrayList<>();
-        for(int i = 0; i<page_expected_size; i++){
-            expectedSizeList.add(new Todo(i, "null", "High",LocalDateTime.now()));
-        }
-        
-        when(repository.findAll()).thenReturn(todos);
-        //given(repository.findAll()).willReturn(new ArrayList<Todo>());
-        List<Todo> result = this.todoService.getAllTodos(page, size);
-
-        System.out.println("ksndsdsdksk"+result);
-        System.out.println("el otro jssjajshjaja omehfhs. skjsdhsj. sjhdhjkjks.  sdnsdjszdjahh. "+expectedSizeList.size());
-        assertEquals(page_expected_size, result.size());
-    }
-   // @Test
-   // void getAllTodos_shouldReturnAllTodosWhenNoPagination() {
-   //     // Arrange
-   //     List<Todo> mockTodos = Arrays.asList(
-   //             new Todo(1, "Buy milk", "High", LocalDateTime.now())
-   //     );
-   //     when(repository.findAll()).thenReturn(mockTodos);
-//
-   //     // Act
-   //     List<Todo> result = todoService.getAllTodos(0, 100); // Large size to get all
-//
-   //     // Assert
-   //     assertEquals(1, result.size());
-   //     assertEquals(mockTodos, result);
-   // }
 }

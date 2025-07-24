@@ -4,11 +4,39 @@ import { useGlobalState } from "../state/todo-context";
 
 export default function TodoTable(){
 
+    const headers = [
+        {
+        id:1,
+        name:"",
+        label: "[ ]"
+        },
+        {
+        id:2,
+        name:"name",
+        label: "Name"
+        },
+        {
+        id:3,
+        name:"priority",
+        label:"Priority"
+        },
+        {
+        id:4,
+        name:"due_date",
+        label:"Due Date"
+        },
+        {
+        id:5,
+        name:"actions",
+        label: "Actions"
+        },
+]
+
     let rowData
     const {todos, setTodos} = useGlobalState()
     useEffect( ()=>{
 
-           fetch(import.meta.env.VITE_TODO_API+'todo').then(res =>{
+           fetch(import.meta.env.VITE_TODO_API+'todos').then(res =>{
             return res.json()
            }).then(data =>{
             console.log(data)
@@ -18,7 +46,7 @@ export default function TodoTable(){
 
         
 
-        //getTodos()
+        
     },[])
     
     
@@ -31,17 +59,18 @@ export default function TodoTable(){
                         <td>{item.actions}</td> 
                     </tr>
     )
+    
 
     return(
         <>
             <table className="todo_table">
                 <thead className="table_head">
                     <tr>
-                        <th>[ ]</th>
-                        <th>Name</th>
-                        <th>priority</th>
-                        <th>due date</th>
-                        <th>actions</th>
+                        {headers.map((header,index)=>
+                            <th key={index}>
+                                <span>{header.label}</span>
+                            </th>
+                        )}
                     </tr>
                 </thead>
                 <tbody >
