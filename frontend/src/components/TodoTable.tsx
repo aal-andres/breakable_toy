@@ -3,37 +3,29 @@ import { useGlobalState } from "../state/todo-context";
 
 
 export default function TodoTable(){
+    const [showUndoneFirst,setShowUndoneFirst] = useState(false);
+    const [showNewestFirst,setShowNewestFirst] = useState(false);
+    const {todos, setTodos} = useGlobalState()
+    const sortByPriority = () => {
+        const sortedTodo = [...todos].sort((a,b)=>{
+            const order = showUndoneFirst ? ["UNDONE","DONE"] : ["DONE","UNDONE"]
+            return order.indexOf(a.status) - order.indexOf(b.status);
+        })
+        setTodos(sortedTodo)
+        setShowUndoneFirst(!showUndoneFirst)
+        console.log('el estadooo',showUndoneFirst)
+    }
 
-    const headers = [
-        {
-        id:1,
-        name:"",
-        label: "[ ]"
-        },
-        {
-        id:2,
-        name:"name",
-        label: "Name"
-        },
-        {
-        id:3,
-        name:"priority",
-        label:"Priority"
-        },
-        {
-        id:4,
-        name:"due_date",
-        label:"Due Date"
-        },
-        {
-        id:5,
-        name:"actions",
-        label: "Actions"
-        },
-]
+    const sortByDate = () => {
+        const sortedTodos = [...todos].sort((a,b)=>{
+            return showNewestFirst ? Date.parse(b.due_date) - Date.parse(a.due_date) : Date.parse(a.due_date) - Date.parse(b.due_date)
+        })
+        setTodos(sortedTodos)
+        setShowNewestFirst(!showNewestFirst)
+    }
+
 
     let rowData
-    const {todos, setTodos} = useGlobalState()
     useEffect( ()=>{
 
            fetch(import.meta.env.VITE_TODO_API+'todos').then(res =>{
@@ -48,6 +40,8 @@ export default function TodoTable(){
 
         
     },[])
+
+
     
     
     rowData = todos.map((item:any) =>
@@ -66,11 +60,20 @@ export default function TodoTable(){
             <table className="todo_table">
                 <thead className="table_head">
                     <tr>
-                        {headers.map((header,index)=>
-                            <th key={index}>
-                                <span>{header.label}</span>
-                            </th>
-                        )}
+                        <th>
+                            <span>status</span>
+                        </th>
+                        <th>
+                            <span>name</span>
+                        </th>
+                        <th onClick={sortByPriority}>
+                            <span>priority</span> <span>{"<>"}</span>
+                        </th>
+                        <th onClick={sortByDate}>
+                            <span>Due Date</span>
+                        </th><th>
+                            <span>Actions</span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody >
