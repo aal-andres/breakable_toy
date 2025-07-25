@@ -78,12 +78,22 @@ public class TodoRepositoryMemory implements TodoRepository{
         return todo;
     }
 
+    public Todo getById(int id){
+        Todo todo = todos.get(id-1);
+        return todo;
+    }
+
     public List<Todo> filterByDueDatePriority(Priority priority, LocalDateTime due_date){
         return todos.stream().filter(todo -> todo.priority == priority).collect(Collectors.toList());
     }
 
-    public Todo delete(int id){
-        return todos.remove(id - 1);
+    public boolean delete(int id){
+         if(todos.remove(id - 1) != null){
+            return true;
+         }else{
+            return false;
+         }
+
         
     }
 
@@ -95,7 +105,7 @@ public class TodoRepositoryMemory implements TodoRepository{
         if (dto.priority!=null) {
             todo.priority = Priority.valueOf(dto.priority.toUpperCase());
         }
-        if(dto.priority!=null){
+        if(dto.due_date!=null){
             todo.due_date = dto.due_date;
         }
         return todo;

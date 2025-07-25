@@ -48,7 +48,7 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
-    public Todo Delete(@PathVariable() int id){
+    public boolean Delete(@PathVariable() int id){
         return service.delete(id);
     }
 

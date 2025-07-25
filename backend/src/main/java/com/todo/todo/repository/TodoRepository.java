@@ -15,9 +15,10 @@ public interface TodoRepository {
     public Todo create(TodoDto dto);
     public Todo markDone(int id);
     public Todo markUndone(int id);
-    public Todo delete(int id);
+    public boolean delete(int id);
     public Todo update(int id, TodoDto dto);
     public Stream<Todo> searchBy(String name,String status, String priority);
     public List<Todo> filterByDueDatePriority(Priority priority, LocalDateTime due_date);
+    public Todo getById(int id);
     
 } 
