@@ -3,6 +3,7 @@ package com.todo.todo.repository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -89,12 +90,22 @@ public class TodoRepositoryMemory implements TodoRepository{
     }
 
     public boolean delete(int id){
-         if(todos.remove(id - 1) != null){
-            return true;
-         }else{
-            return false;
-         }
+       //  if(todos.remove(id - 1) != null){
+       //     return true;
+       //  }else{
+       //     return false;
+       //  }
 
+       Iterator<Todo> iterator = todos.iterator();
+       while(iterator.hasNext()){
+        Todo todo = iterator.next();
+
+            if(todo.id == id){
+                iterator.remove();
+                return true;
+            }
+       }
+       return false;
         
     }
 

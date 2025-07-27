@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.todo.todo.dtos.ResponseDto;
 import com.todo.todo.dtos.TodoDto;
 import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -105,6 +107,64 @@ public class TodoServiceTest {
    //     assertEquals(default_size, result.size());
    // }
 
+   @ParameterizedTest
+    @CsvSource({
+            "0, 5, null, null, null, 5, true", // First page, 5 items, has next
+            "1, 5, null, null, null, 5, true", // Second page, 5 items, has next
+            "3, 5, null, null, null, 3, false", // Last page, 3 items, no next
+            "0, 20, null, null, null, 18, false" // All items, no next
+    })
+    public void getAllTodos_shouldReturnPaginatedResultsAndHasNextPage(int page, int size, String name, String status, String priority, int expectedSize, boolean hasNextPage) {
+        when(repository.searchBy(name, status, priority)).thenReturn(todos.stream());
+        when(repository.findAll()).thenReturn(todos); // For hasAnotherPage calculation
+
+        ResponseDto result = todoService.getAllTodos(page, size, name, status, priority);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.todos.size()).isEqualTo(expectedSize);
+        Assertions.assertThat(result.has_next_page).isEqualTo(hasNextPage);
+    }
+
+
+   @Test
+    public void getAllTodos_shouldReturnFilteredResultsByName() {
+        String filterName = "Buy";
+        List<Todo> filteredTodos = todos.stream()
+                .filter(todo -> todo.name.contains(filterName))
+                .collect(Collectors.toList());
+
+        when(repository.searchBy(eq(filterName), any(), any())).thenReturn(filteredTodos.stream());
+        when(repository.findAll()).thenReturn(todos);
+
+        ResponseDto result = todoService.getAllTodos(0, 10, filterName, null, null);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.todos.size()).isEqualTo(filteredTodos.size());
+        Assertions.assertThat(result.todos.stream().allMatch(t -> t.name.contains(filterName))).isTrue();
+    }
+
+      @Test
+    public void getAllTodos_shouldReturnFilteredResultsByStatus() {
+        // Mark some todos as DONE for testing status filter
+        todos.get(0).status = Status.DONE;
+        todos.get(1).status = Status.UNDONE;
+
+        String filterStatus = "DONE";
+        List<Todo> filteredTodos = todos.stream()
+                .filter(todo -> todo.status.name().equalsIgnoreCase(filterStatus))
+                .collect(Collectors.toList());
+
+        when(repository.searchBy(any(), eq(filterStatus), any())).thenReturn(filteredTodos.stream());
+        when(repository.findAll()).thenReturn(todos); // For hasAnotherPage calculation
+
+
+        ResponseDto result = todoService.getAllTodos(0, 10, null, filterStatus, null);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.todos.size()).isEqualTo(filteredTodos.size());
+        Assertions.assertThat(result.todos.stream().allMatch(t -> t.status.name().equalsIgnoreCase(filterStatus))).isTrue();
+    }
+
     
     @Test
     public void create_with_due_date(){
@@ -181,5 +241,28 @@ public class TodoServiceTest {
         when(repository.delete(id)).thenReturn(true);
         boolean result = todoService.delete(id);
         Assertions.assertThat(result).isTrue();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2",
+            "1",
+            "8"
+    })
+    public void markUndone_shouldMarkTodoAsUndone(int id){ 
+        Todo todo = todos.stream()
+                .filter(t -> t.id == id)
+                .findFirst().
+                orElseThrow(() ->  new IllegalStateException("Test setup error: Todo with ID " + id + " not found."));
+
+        todo.status = Status.DONE;
+        Todo expected_todo = new Todo(id, todo.name, todo.priority.toString(), todo.due_date);
+        expected_todo.status = Status.UNDONE; 
+
+        when(repository.markUndone(id)).thenReturn(expected_todo);
+
+        Todo result = todoService.markUndone(id);
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.status).isEqualTo(Status.UNDONE);
     }
 }

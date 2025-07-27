@@ -7,7 +7,7 @@
 
 .table{
   border: 2px solid black;
-  min-width: 800px;
+  min-width: 1200px;
   height: 100vh;
   padding: 20px 20px 0px 20px;
   display: flex;
@@ -171,4 +171,13 @@ select {
 tbody tr{
   background-color: white;
   color: black;
+}
+
+.status_checkbox{
+  accent-color: red;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-self: center;
+  justify-self: center;
 }

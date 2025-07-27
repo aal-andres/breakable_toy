@@ -1,5 +1,6 @@
 package com.todo.todo.controllers;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.todo.todo.dtos.ResponseDto;
+import com.todo.todo.dtos.TimeStatisticsDto;
 import com.todo.todo.dtos.TodoDto;
-import com.todo.todo.enums.Priority;
-import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
 import com.todo.todo.services.TodoService;
 
@@ -35,10 +35,15 @@ public class TodoController {
     
 
     @GetMapping()
-    public List<Todo> Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size
+    public ResponseDto Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size
     ,@RequestParam(required = false) String name, @RequestParam(required = false) String status
     , @RequestParam(required = false) String priority){
         return service.getAllTodos(page,size,name,status,priority);
+    }
+
+    @GetMapping("/js")
+    public TimeStatisticsDto gas(){
+        return service.getTimeStatistics();
     }
 
 
