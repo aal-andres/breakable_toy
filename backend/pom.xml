@@ -30,6 +30,7 @@
 		<java.version>21</java.version>
 		<byte-buddy-agent.version>1.17.6</byte-buddy-agent.version>
 		<maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
+		<jacoco.version>0.8.12</jacoco.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -61,11 +62,59 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>
+                   <!-- <argLine>
                         -javaagent:"${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy-agent.version}/byte-buddy-agent-${byte-buddy-agent.version}.jar"
-                    </argLine>
+                    </argLine> -->
+
+					<argLine>${argLine} -javaagent:"${settings.localRepository}/net/bytebuddy/byte-buddy-agent/${byte-buddy-agent.version}/byte-buddy-agent-${byte-buddy-agent.version}.jar"</argLine>
                 </configuration>
             </plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase> <goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.80</minimum> </limit>
+										<limit>
+											<counter>BRANCH</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.70</minimum> </limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/YourApplication.class</exclude> <exclude>**/config/**/*</exclude>        <exclude>**/model/**/*</exclude>         </excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

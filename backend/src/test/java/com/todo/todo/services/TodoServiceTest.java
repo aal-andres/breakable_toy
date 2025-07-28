@@ -109,10 +109,10 @@ public class TodoServiceTest {
 
    @ParameterizedTest
     @CsvSource({
-            "0, 5, null, null, null, 5, true", // First page, 5 items, has next
-            "1, 5, null, null, null, 5, true", // Second page, 5 items, has next
-            "3, 5, null, null, null, 3, false", // Last page, 3 items, no next
-            "0, 20, null, null, null, 18, false" // All items, no next
+            "0, 5, null, null, null, 5, true", 
+            "1, 5, null, null, null, 5, true", 
+            "3, 5, null, null, null, 3, false", 
+            "0, 20, null, null, null, 18, false"
     })
     public void getAllTodos_shouldReturnPaginatedResultsAndHasNextPage(int page, int size, String name, String status, String priority, int expectedSize, boolean hasNextPage) {
         when(repository.searchBy(name, status, priority)).thenReturn(todos.stream());
@@ -145,7 +145,6 @@ public class TodoServiceTest {
 
       @Test
     public void getAllTodos_shouldReturnFilteredResultsByStatus() {
-        // Mark some todos as DONE for testing status filter
         todos.get(0).status = Status.DONE;
         todos.get(1).status = Status.UNDONE;
 
@@ -165,9 +164,26 @@ public class TodoServiceTest {
         Assertions.assertThat(result.todos.stream().allMatch(t -> t.status.name().equalsIgnoreCase(filterStatus))).isTrue();
     }
 
+    @Test
+    public void getAllTodos_shouldReturnFilteredResultsByPriority() {
+        String filterPriority = "Low";
+        List<Todo> filteredTodos = todos.stream()
+                .filter(todo -> todo.priority.name().equalsIgnoreCase(filterPriority))
+                .collect(Collectors.toList());
+
+        when(repository.searchBy(any(), any(), eq(filterPriority))).thenReturn(filteredTodos.stream());
+        when(repository.findAll()).thenReturn(todos);
+
+        ResponseDto result = todoService.getAllTodos(0, 10, null, null, filterPriority);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.todos.size()).isEqualTo(filteredTodos.size());
+        Assertions.assertThat(result.todos.stream().allMatch(t -> t.priority.name().equalsIgnoreCase(filterPriority))).isTrue();
+    }
+
     
     @Test
-    public void create_with_due_date(){
+    public void create_ShouldCreateNewTodo(){
         TodoDto dto = new TodoDto();
         dto.name = "damn that's a crazy task dude";
         dto.priority = "High";
@@ -185,7 +201,7 @@ public class TodoServiceTest {
         "1",
         "8"
     })
-    public void check(int id){
+    public void markDone_shouldMarkTodoAsDone(int id){
         Todo todo = todos.stream()
                     .filter(t -> t.id == id)
                     .findFirst().
@@ -207,7 +223,7 @@ public class TodoServiceTest {
         "1",
         "8"
     })
-    public void update(int id){
+    public void update_ShouldUpdateTodoById(int id){
 
         TodoDto updateDto = new TodoDto();
         updateDto.name = "Updated Task Name";
@@ -237,7 +253,7 @@ public class TodoServiceTest {
         "1",
         "8"
     })
-    public void delete(int id){
+    public void delete_ShouldDeleteTodoById(int id){
         when(repository.delete(id)).thenReturn(true);
         boolean result = todoService.delete(id);
         Assertions.assertThat(result).isTrue();
