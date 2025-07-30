@@ -1,7 +1,10 @@
-import { useState } from "react"
-import { addTodo } from "../api/todos"
+import { useEffect, useState } from "react"
+import { addTodo, updateTodo } from "../api/todos"
+import { useGlobalState } from "../state/todo-context"
 
-export default function AddTodo({active, setActive}:{active:boolean, setActive:()=> void}){
+export default function AddTodo(){
+
+     const {todoToUpdate, open,setOpen,todos,setTodos}=useGlobalState()
     
     const [todo, setTodo] = useState<{name:string,priority:string, due_date:string}>({
         name: "",
@@ -10,11 +13,27 @@ export default function AddTodo({active, setActive}:{active:boolean, setActive:(
 
     })
 
-    if(active){
+   useEffect(()=>{
+         if(todoToUpdate){
+        setTodo(() => ({
+            name:todoToUpdate.name,
+            priority:todoToUpdate.priority,
+            due_date:todoToUpdate.due_date
+        }))
+    }else{
+        setTodo({
+            name:"",
+            priority:"",
+            due_date:""
+        })
+    }
+   },[todoToUpdate,open])
+
+    if(open){
         return(
             <div className="overlay">
                 <div className="modal">
-            <span onClick={setActive}>X</span>
+            <span onClick={()=>setOpen(false)}>X</span>
 
                     <div className="grouper">
                         <label htmlFor="">name</label>
@@ -31,9 +50,9 @@ export default function AddTodo({active, setActive}:{active:boolean, setActive:(
                                 ...todo,
                                 priority: e.target.value.toUpperCase()
                             }))}>
-                                <option>High</option>
-                                <option>Medium</option>
-                                <option>Low</option>
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="LOW">Low</option>
                             </select>
                         </div>
 
@@ -44,8 +63,24 @@ export default function AddTodo({active, setActive}:{active:boolean, setActive:(
                         }))}/>
                     </div>
 
-
-                    <button onClick={()=>{addTodo(todo)}}>Add</button>
+                    {
+                        todoToUpdate ?(
+                    <button onClick={async()=>{
+                        console.log('el todous: ',todoToUpdate)
+                        const response = await updateTodo(todoToUpdate.id,todo); 
+                        setTodos((prevTodos)=>
+                            
+                            prevTodos.map(item => 
+                                item.id == todoToUpdate.id ? item = response : item
+                            )
+                        )
+                        console.log('answer ',response)
+                        console.log("z")
+                    }}>update</button>
+                        ): (
+                            <button onClick={()=>{addTodo(todo)}}>Add</button>
+                        )
+                    }
 
 
 

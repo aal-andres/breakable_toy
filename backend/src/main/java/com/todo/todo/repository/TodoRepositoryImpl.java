@@ -47,7 +47,7 @@ public class TodoRepositoryImpl implements TodoRepository{
     }
 
     public Todo update(int id, TodoDto dto){
-        return update(id, dto);
+        return repository.update(id, dto);
     }
 
     public Todo markDone(int id){

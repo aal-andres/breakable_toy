@@ -35,17 +35,13 @@ public class TodoController {
     
 
     @GetMapping()
-    public ResponseDto Get(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9")int size
+    public ResponseDto Get(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10")int size
     ,@RequestParam(required = false) String name, @RequestParam(required = false) String status
     , @RequestParam(required = false) String priority){
-        return service.getAllTodos(page,size,name,status,priority);
+        return service.getAllTodos(page -1,size,name,status,priority);
     }
 
-    @GetMapping("/js")
-    public TimeStatisticsDto gas(){
-        return service.getTimeStatistics();
-    }
-
+   
 
     @PostMapping()
     public Todo Post(@RequestBody TodoDto dto){

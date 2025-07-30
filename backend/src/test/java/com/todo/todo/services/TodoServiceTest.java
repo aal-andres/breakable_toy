@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.todo.todo.dtos.ResponseDto;
+import com.todo.todo.dtos.TimeStatisticsDto;
 import com.todo.todo.dtos.TodoDto;
 import com.todo.todo.enums.Status;
 import com.todo.todo.models.Todo;
@@ -30,6 +31,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -130,7 +133,7 @@ public class TodoServiceTest {
     public void getAllTodos_shouldReturnFilteredResultsByName() {
         String filterName = "Buy";
         List<Todo> filteredTodos = todos.stream()
-                .filter(todo -> todo.name.contains(filterName))
+                .filter(todo -> todo.getName().contains(filterName))
                 .collect(Collectors.toList());
 
         when(repository.searchBy(eq(filterName), any(), any())).thenReturn(filteredTodos.stream());
@@ -140,35 +143,35 @@ public class TodoServiceTest {
 
         Assertions.assertThat(result).isNotNull();
         Assertions.assertThat(result.todos.size()).isEqualTo(filteredTodos.size());
-        Assertions.assertThat(result.todos.stream().allMatch(t -> t.name.contains(filterName))).isTrue();
+        Assertions.assertThat(result.todos.stream().allMatch(t -> t.getName().contains(filterName))).isTrue();
     }
 
       @Test
     public void getAllTodos_shouldReturnFilteredResultsByStatus() {
-        todos.get(0).status = Status.DONE;
-        todos.get(1).status = Status.UNDONE;
+        todos.get(0).setStatus(Status.DONE);
+        todos.get(1).setStatus(Status.UNDONE);
 
         String filterStatus = "DONE";
         List<Todo> filteredTodos = todos.stream()
-                .filter(todo -> todo.status.name().equalsIgnoreCase(filterStatus))
+                .filter(todo -> todo.getStatus().name().equalsIgnoreCase(filterStatus))
                 .collect(Collectors.toList());
 
         when(repository.searchBy(any(), eq(filterStatus), any())).thenReturn(filteredTodos.stream());
-        when(repository.findAll()).thenReturn(todos); // For hasAnotherPage calculation
+        when(repository.findAll()).thenReturn(todos);
 
 
         ResponseDto result = todoService.getAllTodos(0, 10, null, filterStatus, null);
 
         Assertions.assertThat(result).isNotNull();
         Assertions.assertThat(result.todos.size()).isEqualTo(filteredTodos.size());
-        Assertions.assertThat(result.todos.stream().allMatch(t -> t.status.name().equalsIgnoreCase(filterStatus))).isTrue();
+        Assertions.assertThat(result.todos.stream().allMatch(t -> t.getStatus().name().equalsIgnoreCase(filterStatus))).isTrue();
     }
 
     @Test
     public void getAllTodos_shouldReturnFilteredResultsByPriority() {
         String filterPriority = "Low";
         List<Todo> filteredTodos = todos.stream()
-                .filter(todo -> todo.priority.name().equalsIgnoreCase(filterPriority))
+                .filter(todo -> todo.getPriority().name().equalsIgnoreCase(filterPriority))
                 .collect(Collectors.toList());
 
         when(repository.searchBy(any(), any(), eq(filterPriority))).thenReturn(filteredTodos.stream());
@@ -176,9 +179,10 @@ public class TodoServiceTest {
 
         ResponseDto result = todoService.getAllTodos(0, 10, null, null, filterPriority);
 
+        System.out.println("eso funcionabaaaaaaaa: "+result);
         Assertions.assertThat(result).isNotNull();
         Assertions.assertThat(result.todos.size()).isEqualTo(filteredTodos.size());
-        Assertions.assertThat(result.todos.stream().allMatch(t -> t.priority.name().equalsIgnoreCase(filterPriority))).isTrue();
+        Assertions.assertThat(result.todos.stream().allMatch(t -> t.getPriority().name().equalsIgnoreCase(filterPriority))).isTrue();
     }
 
     
@@ -203,18 +207,18 @@ public class TodoServiceTest {
     })
     public void markDone_shouldMarkTodoAsDone(int id){
         Todo todo = todos.stream()
-                    .filter(t -> t.id == id)
+                    .filter(t -> t.getId() == id)
                     .findFirst().
                     orElseThrow(() ->  new IllegalStateException("Test setup error: Todo with ID " + id + " not found."));
 
-        Todo expected_todo = new Todo(id, todo.name, todo.priority.toString(), todo.due_date);
+        Todo expected_todo = new Todo(id, todo.getName(), todo.getPriority().toString(), todo.getDueDate());
 
-        expected_todo.status = Status.DONE;
+        expected_todo.setStatus(Status.DONE);
         when(repository.markDone(id)).thenReturn(expected_todo);
         
         Todo result = todoService.markDone(id);
         Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.status).isEqualTo(Status.DONE);
+        Assertions.assertThat(result.getStatus()).isEqualTo(Status.DONE);
     }
 
     @ParameterizedTest
@@ -267,18 +271,107 @@ public class TodoServiceTest {
     })
     public void markUndone_shouldMarkTodoAsUndone(int id){ 
         Todo todo = todos.stream()
-                .filter(t -> t.id == id)
+                .filter(t -> t.getId() == id)
                 .findFirst().
                 orElseThrow(() ->  new IllegalStateException("Test setup error: Todo with ID " + id + " not found."));
 
-        todo.status = Status.DONE;
-        Todo expected_todo = new Todo(id, todo.name, todo.priority.toString(), todo.due_date);
-        expected_todo.status = Status.UNDONE; 
+        todo.setStatus(Status.DONE);
+        Todo expected_todo = new Todo(id, todo.getName(), todo.getPriority().toString(), todo.getDueDate());
+        expected_todo.setStatus(Status.UNDONE);
 
         when(repository.markUndone(id)).thenReturn(expected_todo);
 
         Todo result = todoService.markUndone(id);
         Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.status).isEqualTo(Status.UNDONE);
+        Assertions.assertThat(result.getStatus()).isEqualTo(Status.UNDONE);
+    }
+
+    @Test
+    void getById_shouldReturnTodoWhenFound() {
+        int todoId = 1;
+        Todo expectedTodo = new Todo(todoId, "Buy groceries", "High", LocalDateTime.parse("2025-07-20T11:30:00"));
+        when(repository.getById(todoId)).thenReturn(expectedTodo);
+
+        Todo result = todoService.getById(todoId);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getId()).isEqualTo(todoId);
+        Assertions.assertThat(result.getName()).isEqualTo("Buy groceries");
+        verify(repository, times(1)).getById(todoId);
+    }
+
+    @Test
+    void getById_shouldReturnNullWhenNotFound() {
+        int nonExistentId = 99;
+        when(repository.getById(nonExistentId)).thenReturn(null);
+
+        Todo result = todoService.getById(nonExistentId);
+
+        Assertions.assertThat(result).isNull();
+        verify(repository, times(1)).getById(nonExistentId);
+    }
+
+    @Test
+    void getTimeStatistics_shouldCalculateCorrectAverages() {
+        // Setup specific todos for time calculation
+        List<Todo> testTodos = new ArrayList<>();
+
+        // High priority, completed in 120 seconds (2 minutes)
+        Todo high1 = new Todo(1, "High Task 1", "High", LocalDateTime.now());
+        high1.created_at = LocalDateTime.now().minusSeconds(120);
+        high1.setCompletedAt(LocalDateTime.now());
+        high1.setStatus(Status.DONE);
+
+        // High priority, completed in 60 seconds (1 minute)
+        Todo high2 = new Todo(2, "High Task 2", "High", LocalDateTime.now());
+        high2.created_at = LocalDateTime.now().minusSeconds(60);
+        high2.setCompletedAt(LocalDateTime.now());
+        high2.setStatus(Status.DONE);
+
+        // Medium priority, completed in 180 seconds (3 minutes)
+        Todo med1 = new Todo(3, "Medium Task 1", "Medium", LocalDateTime.now());
+        med1.created_at = LocalDateTime.now().minusSeconds(180);
+        med1.setCompletedAt(LocalDateTime.now());
+        med1.setStatus(Status.DONE);
+
+        // Low priority, completed in 300 seconds (5 minutes)
+        Todo low1 = new Todo(4, "Low Task 1", "Low", LocalDateTime.now());
+        low1.created_at = LocalDateTime.now().minusSeconds(300);
+        low1.setCompletedAt(LocalDateTime.now());
+        low1.setStatus(Status.DONE);
+
+        // Uncompleted task (should not affect averages)
+        Todo uncompleted = new Todo(5, "Uncompleted Task", "High", LocalDateTime.now());
+        uncompleted.setStatus(Status.UNDONE);
+
+        testTodos.add(high1);
+        testTodos.add(high2);
+        testTodos.add(med1);
+        testTodos.add(low1);
+        testTodos.add(uncompleted);
+
+        when(repository.findAll()).thenReturn(testTodos);
+
+        TimeStatisticsDto result = todoService.getTimeStatistics();
+
+        // Calculate expected averages manually
+        long totalHighSeconds = 120 + 60; // 180
+        long avgHighSeconds = totalHighSeconds / 2; // 90 seconds = 1:30
+
+        long totalMedSeconds = 180; // 180
+        long avgMedSeconds = totalMedSeconds / 1; // 180 seconds = 3:00
+
+        long totalLowSeconds = 300; // 300
+        long avgLowSeconds = totalLowSeconds / 1; // 300 seconds = 5:00
+
+        long totalAllSeconds = totalHighSeconds + totalMedSeconds + totalLowSeconds; // 180 + 180 + 300 = 660
+        long avgAllSeconds = totalAllSeconds / 4; // 660 / 4 = 165 seconds = 2:45
+
+        assertEquals("2:45", result.total_avg);
+        assertEquals("5:0", result.low_avg);
+        assertEquals("3:0", result.medium_avg);
+        assertEquals("1:30", result.high_avg);
+
+        verify(repository, times(1)).findAll();
     }
 }

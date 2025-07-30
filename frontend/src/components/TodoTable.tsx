@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useGlobalState } from "../state/todo-context";
-import { checkTodo, deleteTodo, unCheckTodo } from "../api/todos";
-import type { todo } from "../types/todo";
+import { checkTodo, deleteTodo, getTodosAndTImeMterics, unCheckTodo } from "../api/todos";
+import type { Todo } from "../types/todo";
 
 
 export default function TodoTable(){
     const [showUndoneFirst,setShowUndoneFirst] = useState(false);
     const [showNewestFirst,setShowNewestFirst] = useState(false);
-    const {todos, setTodos} = useGlobalState()
+    const {todos, setTodos,setOpen,setUpdateTodo,setTimeStatistics,setHasNextPage} = useGlobalState()
+    const [showAsCheck, setShow] = useState(false);
     const sortByPriority = () => {
-        const sortedTodo = [...todos].sort((a,b)=>{
+        const sortedTodo:Todo[] = [...todos].sort((a,b)=>{
             const order = showUndoneFirst ? ["UNDONE","DONE"] : ["DONE","UNDONE"]
             return order.indexOf(a.status) - order.indexOf(b.status);
         })
@@ -30,13 +31,20 @@ export default function TodoTable(){
     let rowData
     useEffect( ()=>{
 
-           fetch(import.meta.env.VITE_TODO_API+'todos').then(res =>{
-            return res.json()
-           }).then(data =>{
-            console.log(data)
-                setTodos(data)
-           })
-
+          // fetch(import.meta.env.VITE_TODO_API+'todos').then(res =>{
+          //  return res.json()
+          // }).then(data =>{
+          //  console.log(data.todos)
+          //      setTodos(data.todos)
+          // })
+        const response  =  getTodosAndTImeMterics();
+        console.log(response);
+        response.then(data => {
+            setTodos(data.todos)
+            console.log('tetas',data)
+           setTimeStatistics(data.timeMetrics)
+           setHasNextPage(data.has_next_page)
+        })
 
         
 
@@ -68,13 +76,17 @@ export default function TodoTable(){
     }
 
     const handledeleteTodo = async(todo:any) => {
-        let deletedTodo:todo = await deleteTodo(todo.id);
+        let deletedTodo:boolean = await deleteTodo(todo.id);
         console.log(deletedTodo)
         setTodos((prevTodo:any[])=>{
             return prevTodo.filter(item =>item.id != todo.id)
         })
 
     }
+
+    
+
+
     
     rowData = todos.map((item:any) =>
         <tr key={item.id}>
@@ -82,7 +94,10 @@ export default function TodoTable(){
                         <td>{item.name}</td>
                         <td>{item.priority}</td>
                         <td>{item.due_date}</td>
-                        <td onClick={()=> {console.log(item)}}><span>edit </span> <span>/</span>  <span onClick={()=>handledeleteTodo(item)}>delete</span></td> 
+                        <td onClick={()=> {console.log(item)}}><span onClick={()=>{setOpen(true)
+
+                            setUpdateTodo(item)
+                        }}>edit </span> <span>/</span>  <span onClick={()=>handledeleteTodo(item)}>delete</span></td> 
                     </tr>
     )
     
@@ -93,7 +108,7 @@ export default function TodoTable(){
                 <thead className="table_head">
                     <tr>
                         <th>
-                            <span>  <input className="status_checkbox" type="checkbox" />  </span>
+                            <span>  <input className="status_checkbox" checked={showAsCheck} type="checkbox" onClick={()=> setShow(showAsCheck=>!showAsCheck)}/>  </span>
                         </th>
                         <th>
                             <span>name</span>

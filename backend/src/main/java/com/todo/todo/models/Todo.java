@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 
 
 public class Todo {
-    public int id;
-    public String name;
-    public Status status;
+    private int id;
+    private String name;
+    private Status status;
     public LocalDateTime created_at;
-    public LocalDateTime due_date;
-    public LocalDateTime completed_at;
-    public Priority priority;
+    private LocalDateTime due_date;
+    private LocalDateTime completed_at;
+    private Priority priority;
 
     public Todo(int id, String name,String priority,LocalDateTime due_date ){
         this.id = id;

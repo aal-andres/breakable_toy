@@ -51,13 +51,13 @@ public class TodoRepositoryMemory implements TodoRepository{
         Stream<Todo> filteredList = todos.stream();
         if(name!=null && !name.isEmpty()){
             System.out.println("entreeeeee: "+name);
-            filteredList = filteredList.filter(t -> t.name.toLowerCase().contains(name.toLowerCase()));
+            filteredList = filteredList.filter(t -> t.getName().toLowerCase().contains(name.toLowerCase()));
         }
 
         if(status !=null ){
         if(!status.equals("ALL")){
             
-                filteredList = filteredList.filter(t -> t.status == Status.valueOf(status.toUpperCase()));
+                filteredList = filteredList.filter(t -> t.getStatus() == Status.valueOf(status.toUpperCase()));
             }
         }
 
@@ -65,7 +65,7 @@ public class TodoRepositoryMemory implements TodoRepository{
             
         if(!priority.equals("ALL")){
 
-                filteredList = filteredList.filter(t -> t.priority == Priority.valueOf(priority.toUpperCase()));
+                filteredList = filteredList.filter(t -> t.getPriority() == Priority.valueOf(priority.toUpperCase()));
             }
 
         }
@@ -75,7 +75,7 @@ public class TodoRepositoryMemory implements TodoRepository{
 
     public Todo create(TodoDto dto){
         
-        Todo todo = new Todo(todos.get(todos.size() - 1).id + 1, dto.name, dto.priority, dto.due_date);
+        Todo todo = new Todo(todos.get(todos.size() - 1).getId() + 1, dto.name, dto.priority, dto.due_date);
         todos.add(todo);
         return todo;
     }
@@ -86,7 +86,7 @@ public class TodoRepositoryMemory implements TodoRepository{
     }
 
     public List<Todo> filterByDueDatePriority(Priority priority, LocalDateTime due_date){
-        return todos.stream().filter(todo -> todo.priority == priority).collect(Collectors.toList());
+        return todos.stream().filter(todo -> todo.getPriority() == priority).collect(Collectors.toList());
     }
 
     public boolean delete(int id){
@@ -100,7 +100,7 @@ public class TodoRepositoryMemory implements TodoRepository{
        while(iterator.hasNext()){
         Todo todo = iterator.next();
 
-            if(todo.id == id){
+            if(todo.getId() == id){
                 iterator.remove();
                 return true;
             }
@@ -110,40 +110,64 @@ public class TodoRepositoryMemory implements TodoRepository{
     }
 
     public Todo update(int id, TodoDto dto){
-        Todo todo = todos.get(id -1);
-        if(dto.name !=null){
-            todo.name = dto.name;
-        }
-        if (dto.priority!=null) {
-            todo.priority = Priority.valueOf(dto.priority.toUpperCase());
-        }
-        if(dto.due_date!=null){
-            todo.due_date = dto.due_date;
+        Iterator<Todo> iterator = todos.iterator();
+        Todo todo = null;
+        while(iterator.hasNext()){
+            todo = iterator.next();
+
+            if(todo.getId() == id){
+
+                if(dto.name !=null){
+                    todo.setName(dto.name);
+                }
+                if (dto.priority!=null) {
+                    todo.setPriority(Priority.valueOf(dto.priority.toUpperCase()));
+                }
+                if(dto.due_date!=null){
+                    todo.setDueDate(dto.due_date);
+                }
+                break;
+            }
         }
         return todo;
     }
 
     public Todo markDone(int id){
-        Todo todo = todos.get(id -1);
-        if(todo.status == Status.DONE){
-            return todo;
-        }else{
+        Iterator<Todo> iterator = todos.iterator();
+        Todo todo = null;
+        while(iterator.hasNext()){
+            todo = iterator.next();
+            if(todo.getId() == id){
 
-            todo.status = Status.DONE;
-            todo.completed_at = LocalDateTime.now().withNano(0);
-            return todo;
+                if(todo.getStatus() == Status.DONE){
+                    return todo;
+                }else{
+        
+                    todo.setStatus(Status.DONE);
+                    todo.setCompletedAt(LocalDateTime.now().withNano(0));
+                    return todo;
+                }
+            }
         }
+        return todo;
     }
 
     public Todo markUndone(int id){
-        Todo todo = todos.get(id -1);
+         Iterator<Todo> iterator = todos.iterator();
+        Todo todo = null;
+        while(iterator.hasNext()){
+            todo = iterator.next();
+            if(todo.getId() == id){
 
-        if(todo.status == Status.UNDONE){
-            return todo;
-        }else{
-            todo.status = Status.UNDONE;
-            todo.completed_at = null;
-            return todo;
+                if(todo.getStatus() == Status.UNDONE){
+                    return todo;
+                }else{
+                    todo.setStatus(Status.UNDONE);
+                    todo.setCompletedAt(null);
+                    return todo;
+                }
+            }
         }
+        return todo;
     }
 }

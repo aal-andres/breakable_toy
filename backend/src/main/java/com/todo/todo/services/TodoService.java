@@ -88,18 +88,18 @@ public class TodoService {
 
         for (Todo todo : todos) {
             
-            if(todo.completed_at !=null){
+            if(todo.getCompletedAt() !=null){
 
-                Duration duration = Duration.between(todo.created_at, todo.completed_at);
+                Duration duration = Duration.between(todo.getCreatedAt(), todo.getCompletedAt());
                 all_seconds+= duration.toSeconds();
                 all_amount++;
-                if(todo.priority == Priority.HIGH){
+                if(todo.getPriority() == Priority.HIGH){
                     high_seconds+=duration.toSeconds();
                     high_amount++;
-                }else if(todo.priority == Priority.MEDIUM){
+                }else if(todo.getPriority() == Priority.MEDIUM){
                     med_seconds+=duration.toSeconds();
                     med_amount++;
-                }else if(todo.priority == Priority.LOW){
+                }else if(todo.getPriority() == Priority.LOW){
                     low_seconds+=duration.toSeconds();
                     low_amount++;
                 }

@@ -50,7 +50,7 @@ public class TodoRepositoryMemoryTest {
         List<Todo> result = repository.searchBy(name, status, priority).collect(Collectors.toList());
         assertEquals(expectedCount, result.size());
         if (expectedCount > 0) {
-            assertTrue(result.stream().allMatch(t -> t.name.toLowerCase().contains(name.toLowerCase())));
+            assertTrue(result.stream().allMatch(t -> t.getName().toLowerCase().contains(name.toLowerCase())));
         }
     }
 
@@ -104,10 +104,10 @@ public class TodoRepositoryMemoryTest {
 
         List<Todo> result = repository.searchBy("Groceries", "DONE", "HIGH").collect(Collectors.toList());
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).id);
-        assertEquals("Buy Important Groceries", result.get(0).name);
-        assertEquals(Status.DONE, result.get(0).status);
-        assertEquals(Priority.HIGH, result.get(0).priority);
+        assertEquals(1, result.get(0).getId());
+        assertEquals("Buy Important Groceries", result.get(0).getName());
+        assertEquals(Status.DONE, result.get(0).getStatus());
+        assertEquals(Priority.HIGH, result.get(0).getPriority());
     }
 
 
@@ -123,10 +123,10 @@ public class TodoRepositoryMemoryTest {
 
         assertNotNull(newTodo);
         assertEquals(initialSize + 1, repository.findAll().size());
-        assertEquals(initialSize + 1, newTodo.id); 
-        assertEquals("New Task", newTodo.name);
-        assertEquals(Priority.LOW, newTodo.priority);
-        assertEquals(Status.UNDONE, newTodo.status);
+        assertEquals(initialSize + 1, newTodo.getId()); 
+        assertEquals("New Task", newTodo.getName());
+        assertEquals(Priority.LOW, newTodo.getPriority());
+        assertEquals(Status.UNDONE, newTodo.getStatus());
     }
 
     @Test
@@ -134,8 +134,8 @@ public class TodoRepositoryMemoryTest {
         Todo expectedTodo = repository.findAll().get(0);
         Todo foundTodo = repository.getById(1);
         assertNotNull(foundTodo);
-        assertEquals(expectedTodo.id, foundTodo.id);
-        assertEquals(expectedTodo.name, foundTodo.name);
+        assertEquals(expectedTodo.getId(), foundTodo.getId());
+        assertEquals(expectedTodo.getName(), foundTodo.getName());
     }
 
     @Test
@@ -166,7 +166,7 @@ public class TodoRepositoryMemoryTest {
         assertTrue(result);
         assertEquals(initialSize - 1, repository.findAll().size());
         Optional<Todo> deletedTodo = repository.findAll().stream()
-                                        .filter(t -> t.id == idToDelete)
+                                        .filter(t -> t.getId() == idToDelete)
                                         .findFirst();
         assertFalse(deletedTodo.isPresent());
     }
@@ -191,13 +191,13 @@ public class TodoRepositoryMemoryTest {
         Todo updatedTodo = repository.update(idToUpdate, updateDto);
 
         assertNotNull(updatedTodo);
-        assertEquals(idToUpdate, updatedTodo.id);
-        assertEquals("Updated Project Name", updatedTodo.name);
-        assertEquals(Priority.HIGH, updatedTodo.priority);
-        assertEquals(LocalDateTime.parse("2026-01-01T10:00:00"), updatedTodo.due_date);
+        assertEquals(idToUpdate, updatedTodo.getId());
+        assertEquals("Updated Project Name", updatedTodo.getName());
+        assertEquals(Priority.HIGH, updatedTodo.getPriority());
+        assertEquals(LocalDateTime.parse("2026-01-01T10:00:00"), updatedTodo.getDueDate());
 
         Todo storedTodo = repository.getById(idToUpdate);
-        assertEquals("Updated Project Name", storedTodo.name);
+        assertEquals("Updated Project Name", storedTodo.getName());
     }
 
     @Test
@@ -209,24 +209,24 @@ public class TodoRepositoryMemoryTest {
         Todo updatedTodo = repository.update(idToUpdate, updateDto);
 
         assertNotNull(updatedTodo);
-        assertEquals(idToUpdate, updatedTodo.id);
-        assertEquals("Only Name Changed", updatedTodo.name);
-        assertEquals(Priority.MEDIUM, updatedTodo.priority);
-        assertNotNull(updatedTodo.due_date);
+        assertEquals(idToUpdate, updatedTodo.getId());
+        assertEquals("Only Name Changed", updatedTodo.getName());
+        assertEquals(Priority.MEDIUM, updatedTodo.getPriority());
+        assertNotNull(updatedTodo.getDueDate());
     }
 
     @Test
     void markDone_shouldSetStatusToDoneAndCompletedAt() {
         int idToMarkDone = 4;
         Todo todo = repository.getById(idToMarkDone);
-        assertEquals(Status.UNDONE, todo.status);
+        assertEquals(Status.UNDONE, todo.getStatus());
 
         Todo markedTodo = repository.markDone(idToMarkDone);
 
         assertNotNull(markedTodo);
-        assertEquals(Status.DONE, markedTodo.status);
-        assertNotNull(markedTodo.completed_at);
-        assertEquals(Status.DONE, repository.getById(idToMarkDone).status);
+        assertEquals(Status.DONE, markedTodo.getStatus());
+        assertNotNull(markedTodo.getCompletedAt());
+        assertEquals(Status.DONE, repository.getById(idToMarkDone).getStatus());
     }
 
     @Test
@@ -240,8 +240,8 @@ public class TodoRepositoryMemoryTest {
         Todo markedTodo = repository.markDone(idToMarkDone);
 
         assertNotNull(markedTodo);
-        assertEquals(Status.DONE, markedTodo.status);
-        assertEquals(initialCompletedAt, markedTodo.completed_at);
+        assertEquals(Status.DONE, markedTodo.getStatus());
+        assertEquals(initialCompletedAt, markedTodo.getCompletedAt());
     }
 
     @Test
@@ -254,22 +254,22 @@ public class TodoRepositoryMemoryTest {
         Todo unmarkedTodo = repository.markUndone(idToMarkUndone);
 
         assertNotNull(unmarkedTodo);
-        assertEquals(Status.UNDONE, unmarkedTodo.status);
-        assertNull(unmarkedTodo.completed_at);
-        assertEquals(Status.UNDONE, repository.getById(idToMarkUndone).status);
+        assertEquals(Status.UNDONE, unmarkedTodo.getStatus());
+        assertNull(unmarkedTodo.getCompletedAt());
+        assertEquals(Status.UNDONE, repository.getById(idToMarkUndone).getStatus());
     }
 
     @Test
     void markUndone_shouldNotChangeIfAlreadyUndone() {
         int idToMarkUndone = 7;
         Todo todo = repository.getById(idToMarkUndone);
-        assertEquals(Status.UNDONE, todo.status);
-        assertNull(todo.completed_at);
+        assertEquals(Status.UNDONE, todo.getStatus());
+        assertNull(todo.getCompletedAt());
 
         Todo unmarkedTodo = repository.markUndone(idToMarkUndone);
 
         assertNotNull(unmarkedTodo);
-        assertEquals(Status.UNDONE, unmarkedTodo.status);
-        assertNull(unmarkedTodo.completed_at);
+        assertEquals(Status.UNDONE, unmarkedTodo.getStatus());
+        assertNull(unmarkedTodo.getCompletedAt());
     }
 }

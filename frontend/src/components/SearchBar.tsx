@@ -13,11 +13,12 @@ export default function SearchBar(){
 
       const filterTodos = async () => {
         const todoList = await getFilteredTodos(parameters.name,parameters.priority.toUpperCase(),parameters.status.toUpperCase())
-        console.log(todoList)
-        setTodos(todoList)
+        console.log(todoList.todos)
+        setTodos(todoList.todos)
+        setHasNextPage(todoList.has_next_page)
       }
 
-  const {setTodos} = useGlobalState();
+  const {setTodos,setHasNextPage} = useGlobalState();
 
     return (<div className='filter'>
         
@@ -39,9 +40,9 @@ export default function SearchBar(){
                                 ...parameters,
                                 status: e.target.value
                             }))}>
-                <option>Done</option>
-                <option>Undone</option>
-                <option>All</option>
+                <option value="DONE">Done</option>
+                <option value="UNDONE">Undone</option>
+                <option value="ALL">All</option>
               </select>
             </div>
 
@@ -51,10 +52,10 @@ export default function SearchBar(){
                                 ...parameters,
                                 priority: e.target.value
                             }))}>
-                <option>High</option>
-                <option>Medium</option>
-                <option>Low</option>
-                <option>All</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+                <option value="ALL">All</option>
               </select>
             </div>
           </div>

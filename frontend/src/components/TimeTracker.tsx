@@ -1,16 +1,23 @@
+import { useGlobalState } from "../state/todo-context"
+
 export default function TimeMetrics(){
+    const {timeStatistics} = useGlobalState()
+    console.log('ehjwdbndabnmdbmna',timeStatistics)
     return(
         <div className="time_metrics_container">
 
             <div className="average_time_container">
                 <h3>Average time to finish tasks</h3>
-                <span>23:45 minutes</span>
+                <span>{timeStatistics!.total_avg} minutes</span>
             </div>
             <div className="average_priority_container">
                 <h3>Average time to finish tasks by priority</h3>
-                <li><span>low: </span><span>11:45 minutes</span></li>
-                <li><span>low: </span><span>11:45 minutes</span></li>
-                <li><span>low: </span><span>11:45 minutes</span></li>
+                <div className="list-container">
+                <li><span>low: </span><span>{timeStatistics!.low_avg} minutes</span></li>
+                <li><span>medium: </span><span>{timeStatistics!.medium_avg} minutes</span></li>
+                <li><span>high: </span><span>{timeStatistics!.high_avg} minutes</span></li>
+
+                </div>
             </div>
 
         </div>
