@@ -264,9 +264,9 @@ tbody tr:last-child td:last-child{
 .list-container {
    display: flex;
   flex-direction: column;
-  align-items: center; /* This centers the li elements themselves */
+  align-items: center; 
   justify-content: center;
-  text-align: center; /* <--- ADD THIS LINE */
+  text-align: center; 
 }
 .list-container {
   display: flex;
@@ -276,7 +276,7 @@ tbody tr:last-child td:last-child{
 }
 
 body{
-  background-color: white;/*#0e0b2b;  #2c2b38*/
+  background-color: #2c2b38;/*#0e0b2b;  #2c2b38*/
 }
 
 .pagination-container{

@@ -6,8 +6,9 @@ type Priority = 'HIGH'|'LOW' | 'MEDIUM'
 export type Todo  = {
     id:number,
     name:string,
-    due_date:string,
-    completed_at:string
+    dueDate:string,
+    completedAt:string,
+    createdAt:string;
     status:Status,
     priority:Priority
 }

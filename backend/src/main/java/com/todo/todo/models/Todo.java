@@ -9,7 +9,7 @@ public class Todo {
     private int id;
     private String name;
     private Status status;
-    public LocalDateTime created_at;
+    private LocalDateTime created_at;
     private LocalDateTime due_date;
     private LocalDateTime completed_at;
     private Priority priority;

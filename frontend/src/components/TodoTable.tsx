@@ -21,7 +21,7 @@ export default function TodoTable(){
 
     const sortByDate = () => {
         const sortedTodos = [...todos].sort((a,b)=>{
-            return showNewestFirst ? Date.parse(b.due_date) - Date.parse(a.due_date) : Date.parse(a.due_date) - Date.parse(b.due_date)
+            return showNewestFirst ? Date.parse(b.dueDate) - Date.parse(a.dueDate) : Date.parse(a.dueDate) - Date.parse(b.dueDate)
         })
         setTodos(sortedTodos)
         setShowNewestFirst(!showNewestFirst)
@@ -88,12 +88,12 @@ export default function TodoTable(){
 
 
     
-    rowData = todos.map((item:any) =>
+    rowData = todos.map((item:Todo) =>
         <tr key={item.id}>
                         <th> <input className="status_checkbox" type="checkbox" checked={showCheckedTodo(item)}  onClick={()=>toggleTodoState(item)} /> </th>
                         <td>{item.name}</td>
                         <td>{item.priority}</td>
-                        <td>{item.due_date}</td>
+                        <td>{item.dueDate}</td>
                         <td onClick={()=> {console.log(item)}}><span onClick={()=>{setOpen(true)
 
                             setUpdateTodo(item)
