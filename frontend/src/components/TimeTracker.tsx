@@ -2,7 +2,6 @@ import { useGlobalState } from "../state/todo-context"
 
 export default function TimeMetrics(){
     const {timeStatistics} = useGlobalState()
-    console.log('ehjwdbndabnmdbmna',timeStatistics)
     return(
         <div className="time_metrics_container">
 

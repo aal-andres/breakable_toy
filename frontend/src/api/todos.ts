@@ -3,7 +3,7 @@ import client from "./httpService"
 
 export const addTodo = async (todo:any) => {
     const response = await client.post('todos', todo)
-    console.log(response)
+    console.log('todous',todo)
 }
 
 
@@ -14,7 +14,6 @@ export const getTodosAndTImeMterics = async() => {
 
 export const getFilteredTodos = async(name:string,priority:string,status:string):Promise<any> => {
     const response = await client.get(`todos?name=${name}&status=${status}&priority=${priority}`)
-    console.log(response)
     return response.data;
 }
 

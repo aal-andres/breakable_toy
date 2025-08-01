@@ -309,12 +309,17 @@ body{
 }
 
  .green{
-  background-color: green;
-  border-bottom: green;
+  background-color: #238464;
+  border-bottom: #238464;
 }
 .red {
-  background-color: red;
-  border-bottom: red;
+  background-color: #842323;
+  border-bottom: #842323;
+}
+
+.yellow {
+  background-color: #d6b341;
+  border-bottom: #d6b341;
 }
 .checked-task{
   text-decoration: line-through;

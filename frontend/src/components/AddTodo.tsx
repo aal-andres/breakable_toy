@@ -4,7 +4,7 @@ import { useGlobalState } from "../state/todo-context"
 
 export default function AddTodo(){
 
-     const {todoToUpdate, open,setOpen,todos,setTodos}=useGlobalState()
+     const {todoToUpdate, open,setOpen,setTodos}=useGlobalState()
     
     const [todo, setTodo] = useState<{name:string,priority:string, due_date:string}>({
         name: "",
@@ -32,7 +32,6 @@ export default function AddTodo(){
    },[todoToUpdate,open])
 
    const handleUpdate = async() => {
-        console.log('el todous: ',todoToUpdate)
                         const response = await updateTodo(todoToUpdate!.id,todo); 
                         setTodos((prevTodos)=>
                             
@@ -40,8 +39,7 @@ export default function AddTodo(){
                                 item.id == todoToUpdate!.id ? item = response : item
                             )
                         )
-                        console.log('answer ',response)
-                        console.log("z")
+
         setTimeout(()=>{
 
             setOpen(false)
@@ -69,6 +67,7 @@ export default function AddTodo(){
                                 ...todo,
                                 priority: e.target.value.toUpperCase()
                             }))}>
+                                <option value="" hidden></option>
                                 <option value="HIGH">High</option>
                                 <option value="MEDIUM">Medium</option>
                                 <option value="LOW">Low</option>

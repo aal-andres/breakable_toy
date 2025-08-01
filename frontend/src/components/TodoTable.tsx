@@ -10,23 +10,36 @@ export default function TodoTable(){
     const [showNewestFirst,setShowNewestFirst] = useState(false);
     const {todos, setTodos,setOpen,setUpdateTodo,setTimeStatistics,setHasNextPage} = useGlobalState()
     const [showAsCheck, setShow] = useState(false);
+
+    const twelveHoursFormat:{ [key: number]: number } = {
+        13: 1,
+        14: 2,
+        15: 3,
+        16: 4,
+        17: 5,
+        18: 6,
+        19: 7,
+        20: 8,
+        21: 9,
+        22: 10,
+        23: 11,
+        24: 12
+    }
+
+
     const sortByPriority = () => {
-        console.log('mi rey que pasooooo')
         setShowUndoneFirst(!showUndoneFirst)
         const sortedTodo:Todo[] = [...todos].sort((a,b)=>{
             const order = showUndoneFirst ? ["UNDONE","DONE"] : ["DONE","UNDONE"]
-            console.log('a status',order)
             return order.indexOf(a.status) - order.indexOf(b.status);
         })
         setTodos(sortedTodo)
-        console.log('el estadooo',showUndoneFirst)
     }
 
     const sortTodosByPriority = () => {
         setShowHighFirst(!showHighFirst)
         const sortedTodo:Todo[] = [...todos].sort((a,b)=>{
             const order = showHighFirst ? ["HIGH","MEDIUM","LOW"] : ["LOW","MEDIUM","HIGH"]
-            console.log('el orden',order)
             return order.indexOf(a.priority) - order.indexOf(b.priority);
         })
         setTodos(sortedTodo)
@@ -39,13 +52,15 @@ export default function TodoTable(){
         setTodos(sortedTodos)
         setShowNewestFirst(!showNewestFirst)
     }
-
-    const setRowBackgroundColor = (todo:Todo) => {
-        const millisecondsInAWeek = 1000 * 60 * 60 * 24 * 7
-        
+    const showStrikeTrough = (todo:Todo) =>{
         if(todo.status == 'DONE'){
             return 'checked-task'
         }
+    }
+    const setRowBackgroundColor = (todo:Todo) => {
+        const millisecondsInAWeek = 1000 * 60 * 60 * 24 * 7
+        
+        
 
         if(todo.dueDate==null){
             return 'no-background'
@@ -56,8 +71,9 @@ export default function TodoTable(){
 
         if(weeksRemaining<=1){
             return 'red'
+        }else if(weeksRemaining > 1 && weeksRemaining <= 2){
+            return 'yellow'
         }
-        console.log('parse', weeksRemaining)
         return 'green'
     }
 
@@ -73,10 +89,8 @@ export default function TodoTable(){
     useEffect( ()=>{
 
         const response  =  getTodosAndTImeMterics();
-        console.log(response);
         response.then(data => {
             setTodos(data.todos)
-            console.log('tetas',data)
            setTimeStatistics(data.timeMetrics)
            setHasNextPage(data.has_next_page)
         })
@@ -85,6 +99,23 @@ export default function TodoTable(){
 
         
     },[])
+
+    const dateParser = (todoDate:any) => {
+
+        if(todoDate == null){
+            return 'no due date'
+        }
+        const date = new Date(todoDate)
+        
+        const day = date.getDate()
+        const month = date.toLocaleDateString('en-US', { month: 'long' })
+        const week = date.toLocaleDateString('en-US', { weekday: 'long' })
+        const hour = date.getHours()
+        const minutes = date.getMinutes();
+
+        return `${week}, ${month} ${day}, ${hour>12? twelveHoursFormat[hour]:hour}:${minutes == 0? '00':minutes} ${hour >=12 && hour <= 24? 'PM':'AM'}`
+    }
+
 
 
     const showCheckedTodo= (todo:any):boolean => {
@@ -107,13 +138,11 @@ export default function TodoTable(){
                 item.id === todo.id ? { ...item, status: updatedTodo.todo.status } : item
             )
         );
-        console.log('shit',updatedTodo)
         setTimeStatistics(updatedTodo.timeStatistics)
     }
 
     const handledeleteTodo = async(todo:any) => {
         let deletedTodo:boolean = await deleteTodo(todo.id);
-        console.log(deletedTodo)
         setTodos((prevTodo:any[])=>{
             return prevTodo.filter(item =>item.id != todo.id)
         })
@@ -128,18 +157,19 @@ export default function TodoTable(){
     rowData = todos.map((item:Todo) =>
         <tr key={item.id} className={`row-color ${setRowBackgroundColor(item)}`}>
                         <th> <input className="status_checkbox" type="checkbox" checked={showCheckedTodo(item)}  onClick={()=>toggleTodoState(item)} /> </th>
-                        <td>{item.name}</td>
+                        <td className={`${showStrikeTrough(item)}`}>{item.name}</td>
                         <td>{item.priority}</td>
                         {
                             checkIfTaskHasExpired(item) ?(
                                 <td>Expired</td>
                             ):(
 
-                                <td>{item.dueDate}</td>
+                                <td>{dateParser(item.dueDate)}</td>
                             )
                         }
                         <td onClick={()=> {console.log(item)}} className="actions-container">
-                            <span onClick={()=>{setOpen(true)
+                            <span onClick={()=>{
+                                setOpen(true)
                             setUpdateTodo(item)
                         }} className="material-symbols-outlined">edit </span>   
                         <span className="material-symbols-outlined" onClick={()=>handledeleteTodo(item)}>delete</span>

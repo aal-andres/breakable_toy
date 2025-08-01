@@ -25,7 +25,7 @@ import com.todo.todo.services.TodoService;
 
 @RestController
 @RequestMapping("/todos")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:8080")
 public class TodoController {
 
     @Autowired

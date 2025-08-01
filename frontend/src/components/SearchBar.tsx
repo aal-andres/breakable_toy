@@ -13,7 +13,6 @@ export default function SearchBar(){
 
       const filterTodos = async () => {
         const todoList = await getFilteredTodos(parameters.name,parameters.priority.toUpperCase(),parameters.status.toUpperCase())
-        console.log(todoList.todos)
         setTodos(todoList.todos)
         setHasNextPage(todoList.has_next_page)
       }
@@ -40,6 +39,7 @@ export default function SearchBar(){
                                 ...parameters,
                                 status: e.target.value
                             }))}>
+                <option value="" hidden></option>
                 <option value="DONE">Done</option>
                 <option value="UNDONE">Undone</option>
                 <option value="ALL">All</option>
@@ -52,6 +52,7 @@ export default function SearchBar(){
                                 ...parameters,
                                 priority: e.target.value
                             }))}>
+                <option value="" hidden></option>
                 <option value="HIGH">High</option>
                 <option value="MEDIUM">Medium</option>
                 <option value="LOW">Low</option>
