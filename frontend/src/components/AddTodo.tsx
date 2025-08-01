@@ -18,7 +18,7 @@ export default function AddTodo(){
         setTodo(() => ({
             name:todoToUpdate.name,
             priority:todoToUpdate.priority,
-            due_date:todoToUpdate.due_date
+            due_date:todoToUpdate.dueDate
         }))
     }else{
         setTodo({
@@ -27,12 +27,31 @@ export default function AddTodo(){
             due_date:""
         })
     }
+
+
    },[todoToUpdate,open])
+
+   const handleUpdate = async() => {
+        console.log('el todous: ',todoToUpdate)
+                        const response = await updateTodo(todoToUpdate!.id,todo); 
+                        setTodos((prevTodos)=>
+                            
+                            prevTodos.map(item => 
+                                item.id == todoToUpdate!.id ? item = response : item
+                            )
+                        )
+                        console.log('answer ',response)
+                        console.log("z")
+        setTimeout(()=>{
+
+            setOpen(false)
+        },500)
+   }
 
     if(open){
         return(
             <div className="overlay">
-                <div className="modal">
+                <div data-testid="modal-container" className="modal">
             <span onClick={()=>setOpen(false)}>X</span>
 
                     <div className="grouper">
@@ -65,20 +84,9 @@ export default function AddTodo(){
 
                     {
                         todoToUpdate ?(
-                    <button onClick={async()=>{
-                        console.log('el todous: ',todoToUpdate)
-                        const response = await updateTodo(todoToUpdate.id,todo); 
-                        setTodos((prevTodos)=>
-                            
-                            prevTodos.map(item => 
-                                item.id == todoToUpdate.id ? item = response : item
-                            )
-                        )
-                        console.log('answer ',response)
-                        console.log("z")
-                    }}>update</button>
+                    <button onClick={handleUpdate}>update</button>
                         ): (
-                            <button onClick={()=>{addTodo(todo)}}>Add</button>
+                            <button onClick={()=>{addTodo(todo); setOpen(false)}}>Add</button>
                         )
                     }
 

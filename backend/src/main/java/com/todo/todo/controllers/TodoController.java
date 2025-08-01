@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.todo.todo.dtos.DoneUndoneResponseDto;
 import com.todo.todo.dtos.ResponseDto;
 import com.todo.todo.dtos.TimeStatisticsDto;
 import com.todo.todo.dtos.TodoDto;
@@ -59,12 +60,12 @@ public class TodoController {
     }
 
     @PutMapping("/{id}/undone")
-    public Todo checkTodo(@PathVariable() int id){
+    public DoneUndoneResponseDto checkTodo(@PathVariable() int id){
         return service.markUndone(id);
     }
 
     @PostMapping("/{id}/done")
-    public Todo markDone(@PathVariable() int id){
+    public DoneUndoneResponseDto markDone(@PathVariable() int id){
         return service.markDone(id);
     }
 

@@ -8,7 +8,6 @@ export default function PaginationButton(){
     const nextPage = async() => {
         setCount(count => count+=1)
         const future_count = count+1;
-        console.log(count)
         const response = await getTodosByPage(future_count);
         setTodos(response.todos)
         setHasNextPage(response.has_next_page)
@@ -28,7 +27,7 @@ export default function PaginationButton(){
             {
                 count>1?(
 
-                    <span className="arrow_container" onClick={previousPage}>  <span>{"<"}</span>  </span>
+                    <span data-testid="prev_button" className="arrow_container" onClick={previousPage}>  <span>{"<"}</span>  </span>
                 ):(
                     <div className="non_display"></div>
                 )
@@ -37,7 +36,7 @@ export default function PaginationButton(){
             {
                 hasNextPage?(
 
-                    <span className="arrow_container" onClick={nextPage}>  <span>{">"}</span>  </span>
+                    <span data-testid="next_button" className="arrow_container" onClick={nextPage}>  <span>{">"}</span>  </span>
                 ):(
                     <div className="non_display"></div>
                 )

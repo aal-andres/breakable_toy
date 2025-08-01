@@ -41,7 +41,7 @@ export const GlobalStateProvider = ({children}:{children:React.ReactNode}) => {
         high_avg:'',
         medium_avg:''
     });
-    const [hasNextPage, setHasNextPage] = useState(false);
+    const [hasNextPage, setHasNextPage] = useState(true);
 
     return (
         
@@ -56,9 +56,6 @@ export const GlobalStateProvider = ({children}:{children:React.ReactNode}) => {
 export const useGlobalState = () => {
     const context = useContext(GlobalState);
 
-    if(!context){
-        console.log('aaaaaaaa')
-    }
-    console.log('contextooooooo',context)
+    
     return context;
 }

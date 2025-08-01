@@ -6,6 +6,7 @@ import TimeMetrics from './components/TimeTracker'
 import AddTodo from './components/AddTodo'
 import { GlobalStateProvider, useGlobalState } from './state/todo-context'
 import PaginationButton from './components/PaginationButton'
+import { resetTable } from './helpers/getTodoToUpdate'
 
 function App() {
   
@@ -30,8 +31,15 @@ function AppState(){
       <SearchBar/>
       <div className='table'>
 
+      <div className='app-action-buttons'>
 
-      <button className='add_button' onClick={()=> setOpen(true)}>Add Todo +</button>
+      <button data-testid="modal" className='add_button' onClick={()=> setOpen(true)}>Add Todo +</button>
+      <button onClick={resetTable}>
+        <span className="material-symbols-outlined">
+refresh
+</span>
+      </button>
+      </div>
 
       <TodoTable/>
       </div>

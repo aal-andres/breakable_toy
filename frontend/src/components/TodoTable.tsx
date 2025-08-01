@@ -6,17 +6,30 @@ import type { Todo } from "../types/todo";
 
 export default function TodoTable(){
     const [showUndoneFirst,setShowUndoneFirst] = useState(false);
+    const [showHighFirst,setShowHighFirst] = useState(false);
     const [showNewestFirst,setShowNewestFirst] = useState(false);
     const {todos, setTodos,setOpen,setUpdateTodo,setTimeStatistics,setHasNextPage} = useGlobalState()
     const [showAsCheck, setShow] = useState(false);
     const sortByPriority = () => {
+        console.log('mi rey que pasooooo')
+        setShowUndoneFirst(!showUndoneFirst)
         const sortedTodo:Todo[] = [...todos].sort((a,b)=>{
             const order = showUndoneFirst ? ["UNDONE","DONE"] : ["DONE","UNDONE"]
+            console.log('a status',order)
             return order.indexOf(a.status) - order.indexOf(b.status);
         })
         setTodos(sortedTodo)
-        setShowUndoneFirst(!showUndoneFirst)
         console.log('el estadooo',showUndoneFirst)
+    }
+
+    const sortTodosByPriority = () => {
+        setShowHighFirst(!showHighFirst)
+        const sortedTodo:Todo[] = [...todos].sort((a,b)=>{
+            const order = showHighFirst ? ["HIGH","MEDIUM","LOW"] : ["LOW","MEDIUM","HIGH"]
+            console.log('el orden',order)
+            return order.indexOf(a.priority) - order.indexOf(b.priority);
+        })
+        setTodos(sortedTodo)
     }
 
     const sortByDate = () => {
@@ -27,16 +40,38 @@ export default function TodoTable(){
         setShowNewestFirst(!showNewestFirst)
     }
 
+    const setRowBackgroundColor = (todo:Todo) => {
+        const millisecondsInAWeek = 1000 * 60 * 60 * 24 * 7
+        
+        if(todo.status == 'DONE'){
+            return 'checked-task'
+        }
 
+        if(todo.dueDate==null){
+            return 'no-background'
+        }
+        
+        const timeRemainingMilli = Date.parse(todo.dueDate) - Date.parse(todo.createdAt);
+        const weeksRemaining = timeRemainingMilli / millisecondsInAWeek;
+
+        if(weeksRemaining<=1){
+            return 'red'
+        }
+        console.log('parse', weeksRemaining)
+        return 'green'
+    }
+
+    const checkIfTaskHasExpired = (todo:Todo):boolean => {
+        if(todo.dueDate!=null){
+            if(Date.now() > Date.parse(todo.dueDate)){
+                return true
+            }
+        }
+        return false
+    }
     let rowData
     useEffect( ()=>{
 
-          // fetch(import.meta.env.VITE_TODO_API+'todos').then(res =>{
-          //  return res.json()
-          // }).then(data =>{
-          //  console.log(data.todos)
-          //      setTodos(data.todos)
-          // })
         const response  =  getTodosAndTImeMterics();
         console.log(response);
         response.then(data => {
@@ -66,13 +101,14 @@ export default function TodoTable(){
         }else{
             updatedTodo = await unCheckTodo(todo.id)
         }
-
+        
         setTodos((prevTodos: any[]) =>
             prevTodos.map(item =>
-                item.id === todo.id ? { ...item, status: updatedTodo.status } : item
+                item.id === todo.id ? { ...item, status: updatedTodo.todo.status } : item
             )
         );
-        console.log(updatedTodo)
+        console.log('shit',updatedTodo)
+        setTimeStatistics(updatedTodo.timeStatistics)
     }
 
     const handledeleteTodo = async(todo:any) => {
@@ -88,20 +124,29 @@ export default function TodoTable(){
 
 
     
+    
     rowData = todos.map((item:Todo) =>
-        <tr key={item.id}>
+        <tr key={item.id} className={`row-color ${setRowBackgroundColor(item)}`}>
                         <th> <input className="status_checkbox" type="checkbox" checked={showCheckedTodo(item)}  onClick={()=>toggleTodoState(item)} /> </th>
                         <td>{item.name}</td>
                         <td>{item.priority}</td>
-                        <td>{item.dueDate}</td>
-                        <td onClick={()=> {console.log(item)}}><span onClick={()=>{setOpen(true)
+                        {
+                            checkIfTaskHasExpired(item) ?(
+                                <td>Expired</td>
+                            ):(
 
+                                <td>{item.dueDate}</td>
+                            )
+                        }
+                        <td onClick={()=> {console.log(item)}} className="actions-container">
+                            <span onClick={()=>{setOpen(true)
                             setUpdateTodo(item)
-                        }}>edit </span> <span>/</span>  <span onClick={()=>handledeleteTodo(item)}>delete</span></td> 
+                        }} className="material-symbols-outlined">edit </span>   
+                        <span className="material-symbols-outlined" onClick={()=>handledeleteTodo(item)}>delete</span>
+                        </td> 
                     </tr>
     )
     
-
     return(
         <>
             <table className="todo_table">
@@ -113,11 +158,27 @@ export default function TodoTable(){
                         <th>
                             <span>name</span>
                         </th>
-                        <th onClick={sortByPriority}>
-                            <span>priority</span> <span>{"<>"}</span>
+                        <th onClick={sortTodosByPriority} className="sorting-action-container">
+                            <span>priority</span> 
+                            {
+                                showHighFirst? (
+
+                                    <span className="material-symbols-outlined">arrow_downward</span>
+                                ):(
+                                    <span className="material-symbols-outlined">arrow_upward</span>
+                                )
+                            }
                         </th>
-                        <th onClick={sortByDate}>
+                        <th onClick={sortByDate} className="sorting-action-container">
                             <span>Due Date</span>
+                            {
+                                showNewestFirst? (
+
+                                    <span className="material-symbols-outlined">arrow_downward</span>
+                                ):(
+                                    <span className="material-symbols-outlined">arrow_upward</span>
+                                )
+                            }
                         </th><th>
                             <span>Actions</span>
                         </th>

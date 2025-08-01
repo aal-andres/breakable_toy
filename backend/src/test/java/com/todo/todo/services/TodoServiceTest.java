@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.todo.todo.dtos.DoneUndoneResponseDto;
 import com.todo.todo.dtos.ResponseDto;
 import com.todo.todo.dtos.TimeStatisticsDto;
 import com.todo.todo.dtos.TodoDto;
@@ -216,9 +217,9 @@ public class TodoServiceTest {
         expected_todo.setStatus(Status.DONE);
         when(repository.markDone(id)).thenReturn(expected_todo);
         
-        Todo result = todoService.markDone(id);
+        DoneUndoneResponseDto result = todoService.markDone(id);
         Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.getStatus()).isEqualTo(Status.DONE);
+        Assertions.assertThat(result.getTodo().getStatus()).isEqualTo(Status.DONE);
     }
 
     @ParameterizedTest
@@ -281,9 +282,9 @@ public class TodoServiceTest {
 
         when(repository.markUndone(id)).thenReturn(expected_todo);
 
-        Todo result = todoService.markUndone(id);
+        DoneUndoneResponseDto result = todoService.markUndone(id);
         Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.getStatus()).isEqualTo(Status.UNDONE);
+        Assertions.assertThat(result.getTodo().getStatus()).isEqualTo(Status.UNDONE);
     }
 
     @Test

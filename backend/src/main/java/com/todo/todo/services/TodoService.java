@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.todo.todo.dtos.DoneUndoneResponseDto;
 import com.todo.todo.dtos.ResponseDto;
 import com.todo.todo.dtos.TimeStatisticsDto;
 import com.todo.todo.dtos.TodoDto;
@@ -66,12 +67,21 @@ public class TodoService {
         return repository.update(id, dto);
     }
 
-    public Todo markDone(int id){
-        return repository.markDone(id);
+    public DoneUndoneResponseDto markDone(int id){
+        DoneUndoneResponseDto response = new DoneUndoneResponseDto();
+        Todo todo =  repository.markDone(id);
+        response.setTodo(todo);
+        response.setTimeStatistics(getTimeStatistics());
+        return response;
     }
 
-    public Todo markUndone(int id){
-        return repository.markUndone(id);
+    public DoneUndoneResponseDto markUndone(int id){
+        DoneUndoneResponseDto response = new DoneUndoneResponseDto();
+        
+        Todo todo =  repository.markUndone(id);
+        response.setTodo(todo);
+        response.setTimeStatistics(getTimeStatistics());
+        return response;
     }
 
     public TimeStatisticsDto getTimeStatistics(){
