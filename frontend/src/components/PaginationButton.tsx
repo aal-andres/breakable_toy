@@ -16,7 +16,6 @@ export default function PaginationButton(){
     const previousPage = async()=>{
         setCount(count => count-=1)
         const future_count = count-1;
-        console.log(count)
         const response = await getTodosByPage(future_count);
         setTodos(response.todos)
         setHasNextPage(response.has_next_page)
